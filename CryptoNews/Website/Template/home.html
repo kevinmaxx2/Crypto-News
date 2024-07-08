@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Top 10 Cryptos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #fff;
+            color: #333;
+        }
+        .carousel-item {
+            height: 400px;
+            background-color: #fff5f5; /* Light red background */
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .crypto-name {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .crypto-price {
+            font-size: 1.5rem;
+        }
+        .crypto-marketcap {
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Top 10 Cryptocurrencies</h1>
+        <div id="cryptoCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner" id="cryptoCarouselInner">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+            <a class="carousel-control-prev" href="#cryptoCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#cryptoCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/api/crypto-data/')
+                .then(response => response.json())
+                .then(data => {
+                    const carouselInner = document.getElementById('cryptoCarouselInner');
+                    let currentIndex = 0;
+
+                    function updateCarousel() {
+                        carouselInner.innerHTML = ''; // Clear existing items
+                        for (let i = currentIndex; i < currentIndex + 10; i++) {
+                            const crypto = data[i % data.length]; // Wrap around using modulus
+                            const carouselItem = document.createElement('div');
+                            carouselItem.className = `carousel-item ${i === currentIndex ? 'active' : ''}`;
+                            carouselItem.innerHTML = `
+                                <div class="crypto-name">${crypto.name} (${crypto.symbol})</div>
+                                <div class="crypto-price">${crypto.price} USD</div>
+                                <div class="crypto-marketcap">Market Cap: ${crypto.marketcap} USD</div>
+                            `;
+                            carouselInner.appendChild(carouselItem);
+                        }
+                        currentIndex = (currentIndex + 1) % data.length; // Move to the next set
+                    }
+
+                    updateCarousel(); // Initial call
+                    setInterval(updateCarousel, 10000); // Update every 10 seconds
+
+                    // Manually control carousel navigation
+                    document.querySelector('.carousel-control-prev').addEventListener('click', function() {
+                        currentIndex = (currentIndex - 1 + data.length) % data.length;
+                        updateCarousel();
+                    });
+
+                    document.querySelector('.carousel-control-next').addEventListener('click', function() {
+                        currentIndex = (currentIndex + 1) % data.length;
+                        updateCarousel();
+                    });
+                })
+                .catch(error => console.error('Error fetching crypto data:', error));
+        });
+    </script>
+</body>
+</html>
