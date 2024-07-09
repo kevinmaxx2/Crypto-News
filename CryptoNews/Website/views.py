@@ -24,7 +24,8 @@ def get_crypto_data(request):
             'order': 'market_cap_desc',
             'per_page': 10,
             'page': 1,
-            'sparkline': False
+            'sparkline': False,
+            'price_change_percentage': '24h'
         }
         response = requests.get(url, params=params)
         data = response.json()
@@ -33,8 +34,9 @@ def get_crypto_data(request):
             {
                 'name': crypto['name'],
                 'symbol': crypto['symbol'].upper(),
-                'price': f"{crypto['current_price']:,.2f}",
-                'marketcap': f"{crypto['market_cap']:,.0f}"
+                'price': _format_price(crypto['current_price']),
+                'marketcap': _format_marketcap(crypto['market_cap']),
+                'image': crypto['image']
             }
             for crypto in data
         ]
@@ -43,6 +45,24 @@ def get_crypto_data(request):
         data = transformed_data
 
     return JsonResponse(data, safe=False)
+
+def _format_price(price):
+    # Convert price to float
+    price_float = float(price)
+    
+    # Round up if decimal part is >= 0.60
+    if price_float % 1 >= 0.60:
+        return f"{int(price_float) + 1:,}"
+    else:
+        return f"{int(price_float):,}"
+
+def _format_marketcap(market_cap):
+    if market_cap >= 1_000_000_000:
+        return f"{round(market_cap / 1_000_000_000)}B"
+    elif market_cap >= 1_000_000:
+        return f"{round(market_cap / 1_000_000)}M"
+    else:
+        return f"{market_cap}"
 
 def register_view(request):
     if request.method == 'POST':

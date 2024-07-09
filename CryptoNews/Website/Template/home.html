@@ -4,104 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Top 10 Cryptos</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
     <style>
         body {
-            background-color: #fe5f55; /* New background color for the entire website */
-            color: #333;
+            background-color: #eb2632; /* Red background color for the entire website */
+            color: #ffffff; /* White text color */
+            font-family: Arial, sans-serif; /* Default font family */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+        .container {
+            max-width: 800px; /* Adjust container width for content */
+            margin: 0 auto; /* Center align container */
+            padding: 20px; /* Add padding for spacing */
+        }
+        h1 {
+            text-align: center; /* Center align h1 */
+            font-size: 2.5rem; /* Increase font size */
+            margin-bottom: 20px; /* Add space below h1 */
+        }
+        .carousel {
+            background-color: rgba(23, 37, 61, 0.8); /* Dark blue background color with opacity */
+            padding: 20px; /* Add padding inside carousel */
+            border-radius: 10px; /* Rounded corners */
+            margin-top: 20px; /* Add space above carousel */
+        }
+        .slick-slider {
+            position: relative; /* Ensure relative positioning for slider */
+        }
+        .slick-next, .slick-prev {
+            z-index: 1; /* Ensure arrows are above carousel items */
+            top: 50%; /* Align arrows vertically centered */
+            transform: translateY(-50%); /* Adjust for vertical alignment */
+            color: #ffffff; /* White color for arrows */
+        }
+        .slick-prev {
+            left: -30px; /* Position left arrow */
+        }
+        .slick-next {
+            right: -30px; /* Position right arrow */
         }
         .carousel-item {
-            height: 400px;
-            background-color: #F0B67F; /* New background color for the carousel */
-            color: #fff; /* Adjust text color for better contrast */
-            display: none; /* Hide all items by default */
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .carousel-item.active {
-            display: flex; /* Display only active item */
+            display: flex; /* Use flexbox for layout */
+            flex-direction: column; /* Align items in column layout */
+            justify-content: space-between; /* Center content vertically, but keep the image left-aligned */
+            align-items: center; /* Center content horizontally */
+            height: 300px;
+            background-color: #ffffff;
+            color: #17253d;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         .crypto-name {
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2rem; /* Larger font size for crypto name */
+            font-weight: bold; /* Bold font weight */
+            margin-bottom: 10px; /* Add space below crypto name */
+            text-align: center; /* Center align text */
         }
         .crypto-price {
-            font-size: 1.5rem;
+            font-size: 1.5rem; /* Font size for price */
+            text-align: center; /* Center align text */
         }
         .crypto-marketcap {
-            font-size: 1rem;
+            font-size: 1rem; /* Font size for market cap */
+            text-align: center; /* Center align text */
+        }
+        .crypto-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 10px;
+            margin-left: auto; /* Align the image to the right */
+            margin-right: auto; /* Align the image to the right */
+            display: block; /* Ensure the image is displayed as a block element */
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Top 10 Cryptocurrencies</h1>
-        <div id="cryptoCarousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner" id="cryptoCarouselInner">
-                <!-- Dynamic content will be inserted here -->
-            </div>
+    <div class="container">
+        <h1>Top 10 Cryptocurrencies</h1>
+        <div id="cryptoCarousel" class="carousel">
+            <!-- Dynamic content will be inserted here -->
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            let currentIndex = 0;
             let data = [];
 
-            // Function to update carousel items with new data
-            function updateCarouselItem(index) {
-                const carouselInner = document.getElementById('cryptoCarouselInner');
-                const carouselItems = carouselInner.getElementsByClassName('carousel-item');
-
-                // Check if items exist
-                if (carouselItems.length === 0) {
-                    // No items exist, create them from scratch
-                    data.forEach((crypto, idx) => {
-                        const carouselItem = document.createElement('div');
-                        carouselItem.className = `carousel-item ${idx === index ? 'active' : ''}`;
-                        carouselItem.innerHTML = `
-                            <div class="crypto-name">${crypto.name}</div>
-                            <div class="crypto-price">${crypto.price} USD</div>
-                            <div class="crypto-marketcap">Market Cap: ${crypto.marketcap} USD</div>
-                        `;
-                        carouselInner.appendChild(carouselItem);
-                    });
-                } else {
-                    // Update existing items with new data
-                    Array.from(carouselItems).forEach((item, idx) => {
-                        if (idx === index) {
-                            item.querySelector('.crypto-name').textContent = data[idx].name;
-                            item.querySelector('.crypto-price').textContent = `${data[idx].price} USD`;
-                            item.querySelector('.crypto-marketcap').textContent = `Market Cap: ${data[idx].marketcap} USD`;
-                            item.classList.add('active');
-                        } else {
-                            item.classList.remove('active');
-                        }
-                    });
-                }
-            }
-
-            // Function to fetch data from API
-            function fetchData() {
+            // Function to fetch initial data from API
+            function fetchInitialData() {
                 fetch('/api/crypto-data/')
                     .then(response => response.json())
                     .then(fetchedData => {
-                        data = fetchedData;
-                        updateCarouselItem(currentIndex);
-                        currentIndex = (currentIndex + 1) % data.length;
+                        data = fetchedData.slice(0, 10); // Assuming the API returns data for 10 indices
+
+                        // Initialize slick carousel with fetched data
+                        const carousel = $('#cryptoCarousel');
+                        data.forEach(crypto => {
+                            const carouselItem = `
+                                <div class="carousel-item">
+                                    <img class="crypto-image" src="${crypto.image}" alt="${crypto.name} Image">
+                                    <div class="crypto-name">${crypto.name}</div>
+                                    <div class="crypto-price">${crypto.price} USD</div>
+                                    <div class="crypto-marketcap">Market Cap: ${crypto.marketcap}</div>
+                                </div>
+                            `;
+                            carousel.append(carouselItem);
+                        });
+
+                        // Initialize Slick carousel with autoplay
+                        carousel.slick({
+                            dots: true,
+                            infinite: true,
+                            speed: 500,
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                            autoplay: true,
+                            autoplaySpeed: 10000, // 10 seconds
+                            prevArrow: '<button type="button" class="slick-prev">&#9664;</button>',
+                            nextArrow: '<button type="button" class="slick-next">&#9654;</button>'
+                        });
+
+                        // Pause autoplay on arrow click
+                        carousel.on('click', '.slick-prev, .slick-next', function() {
+                            carousel.slick('slickPause');
+                        });
                     })
                     .catch(error => console.error('Error fetching crypto data:', error));
             }
 
-            // Initial call to fetch data
-            fetchData();
-
-            // Fetch new data every 10 seconds
-            setInterval(fetchData, 10000); // 10 seconds
+            // Initial call to fetch data when the page loads
+            fetchInitialData();
         });
     </script>
 </body>
