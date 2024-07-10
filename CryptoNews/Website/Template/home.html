@@ -13,6 +13,7 @@
             font-family: Arial, sans-serif; /* Default font family */
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
+            position: relative;
         }
         .container {
             max-width: 800px; /* Adjust container width for content */
@@ -80,13 +81,123 @@
             margin-right: auto; /* Align the image to the right */
             display: block; /* Ensure the image is displayed as a block element */
         }
+        .auth-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .auth-links a {
+            background-color: #ffffff; /* White background color */
+            color: #17253d; /* Dark blue text color */
+            padding: 10px 15px; /* Padding for the links */
+            text-decoration: none; /* Remove underline from links */
+            border-radius: 5px; /* Rounded corners */
+            margin-left: 10px; /* Space between the links */
+            font-weight: bold; /* Bold text */
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 400px; /* Limit the maximum width */
+            border-radius: 10px; /* Rounded corners */
+        }
+        .modal-header {
+            text-align: center; /* Center align header */
+            font-size: 1.5rem; /* Increase font size */
+            margin-bottom: 20px; /* Add space below header */
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal input[type="email"],
+        .modal input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .modal button {
+            background-color: #17253d; /* Dark blue background color */
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .modal button:hover {
+            background-color: #111; /* Darker background on hover */
+        }
+        .g-signup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #db4437; /* Google's red color */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .g-signup img {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
+    <div class="auth-links">
+        <a href="/login/">Log In</a>
+        <a href="#" id="registerLink">Register</a>
+    </div>
     <div class="container">
         <h1>Top 10 Cryptocurrencies</h1>
         <div id="cryptoCarousel" class="carousel">
             <!-- Dynamic content will be inserted here -->
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">Sign Up</div>
+            <form id="registerForm">
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+            <button class="g-signup" id="gSignup">
+                <img src="https://img.icons8.com/color/16/000000/google-logo.png"/> Sign up with Google
+            </button>
         </div>
     </div>
 
@@ -140,6 +251,48 @@
 
             // Initial call to fetch data when the page loads
             fetchInitialData();
+
+            // Get the modal
+            const modal = document.getElementById("registerModal");
+
+            // Get the button that opens the modal
+            const btn = document.getElementById("registerLink");
+
+            // Get the <span> element that closes the modal
+            const span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal 
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            // Handle form submission
+            const registerForm = document.getElementById("registerForm");
+            registerForm.onsubmit = function(event) {
+                event.preventDefault();
+                // Add your form submission logic here (e.g., send data to the server)
+                alert("Form submitted!");
+                modal.style.display = "none";
+            }
+
+            // Handle Google Signup button click
+            const gSignup = document.getElementById("gSignup");
+            gSignup.onclick = function() {
+                // Add your Google OAuth2 logic here
+                alert("Google Signup clicked!");
+            }
         });
     </script>
 </body>
