@@ -1,16 +1,21 @@
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from .forms import CustomUserCreationForm, EmailAuthenticationForm
 import requests  # Import requests module
-from django.core.cache import cache, caches
-from django.utils import timezone
 import time
-from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
-from django.views.decorators.csrf import csrf_exempt
 import json
+import logging
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.models import User
+from django.core.cache import cache, caches
 from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+from .forms import CustomUserCreationForm, EmailAuthenticationForm
+
 # Create your views here.
 def home_view(request):
     return render(request, 'home.html')
@@ -121,3 +126,40 @@ def register_view(request):
             return JsonResponse({'success': False, 'message': 'Username already exists.'}, status=400)
     else:
         return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
+    
+
+@login_required
+def portfolio_view(request):
+    return render(request, 'portfolio.html')
+
+@login_required
+def settings_view(request):
+    return render(request, 'settings.html')
+
+class CustomLogoutView(LogoutView):
+    next_page = '/'
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def ajax_login_view(request):
+    logger.debug(f"Request method: {request.method}")
+    logger.debug(f"Request headers: {request.headers}")
+
+    if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        logger.debug(f"Username: {username}, Password: {password}")
+
+        # Your authentication logic here
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # Authentication successful
+            return JsonResponse({'success': True})
+        else:
+            # Authentication failed
+            return JsonResponse({'success': False, 'error': 'Invalid email or password. Please try again.'})
+
+    # Handle GET requests or non-AJAX requests if necessary
+    return JsonResponse({'error': 'Method not allowed'}, status=405)

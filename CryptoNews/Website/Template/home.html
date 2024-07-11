@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,49 +9,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
     <style>
         body {
-            background-color: #eb2632; /* Red background color for the entire website */
-            color: #ffffff; /* White text color */
-            font-family: Arial, sans-serif; /* Default font family */
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
+            background-color: #eb2632;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             position: relative;
         }
         .container {
-            max-width: 800px; /* Adjust container width for content */
-            margin: 0 auto; /* Center align container */
-            padding: 20px; /* Add padding for spacing */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
         h1 {
-            text-align: center; /* Center align h1 */
-            font-size: 2.5rem; /* Increase font size */
-            margin-bottom: 20px; /* Add space below h1 */
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
         }
         .carousel {
-            background-color: rgba(23, 37, 61, 0.8); /* Dark blue background color with opacity */
-            padding: 20px; /* Add padding inside carousel */
-            border-radius: 10px; /* Rounded corners */
-            margin-top: 20px; /* Add space above carousel */
+            background-color: rgba(23, 37, 61, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
         }
         .slick-slider {
-            position: relative; /* Ensure relative positioning for slider */
+            position: relative;
         }
         .slick-next, .slick-prev {
-            z-index: 1; /* Ensure arrows are above carousel items */
-            top: 50%; /* Align arrows vertically centered */
-            transform: translateY(-50%); /* Adjust for vertical alignment */
-            color: #ffffff; /* White color for arrows */
+            z-index: 1;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffffff;
         }
         .slick-prev {
-            left: -30px; /* Position left arrow */
+            left: -30px;
         }
         .slick-next {
-            right: -30px; /* Position right arrow */
+            right: -30px;
         }
         .carousel-item {
-            display: flex; /* Use flexbox for layout */
-            flex-direction: column; /* Align items in column layout */
-            justify-content: space-between; /* Center content vertically, but keep the image left-aligned */
-            align-items: center; /* Center content horizontally */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
             height: 300px;
             background-color: #ffffff;
             color: #17253d;
@@ -60,26 +61,26 @@
             position: relative;
         }
         .crypto-name {
-            font-size: 2rem; /* Larger font size for crypto name */
-            font-weight: bold; /* Bold font weight */
-            margin-bottom: 10px; /* Add space below crypto name */
-            text-align: center; /* Center align text */
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
         }
         .crypto-price {
-            font-size: 1.5rem; /* Font size for price */
-            text-align: center; /* Center align text */
+            font-size: 1.5rem;
+            text-align: center;
         }
         .crypto-marketcap {
-            font-size: 1rem; /* Font size for market cap */
-            text-align: center; /* Center align text */
+            font-size: 1rem;
+            text-align: center;
         }
         .crypto-image {
             max-width: 100px;
             max-height: 100px;
             margin-bottom: 10px;
-            margin-left: auto; /* Align the image to the right */
-            margin-right: auto; /* Align the image to the right */
-            display: block; /* Ensure the image is displayed as a block element */
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
         .auth-links {
             position: absolute;
@@ -87,38 +88,60 @@
             right: 10px;
         }
         .auth-links a {
-            background-color: #ffffff; /* White background color */
-            color: #17253d; /* Dark blue text color */
-            padding: 10px 15px; /* Padding for the links */
-            text-decoration: none; /* Remove underline from links */
-            border-radius: 5px; /* Rounded corners */
-            margin-left: 10px; /* Space between the links */
-            font-weight: bold; /* Bold text */
+            background-color: #ffffff;
+            color: #17253d;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1;}
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1000;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
         }
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
+            margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            max-width: 400px; /* Limit the maximum width */
-            border-radius: 10px; /* Rounded corners */
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
         }
         .modal-header {
-            text-align: center; /* Center align header */
-            font-size: 1.5rem; /* Increase font size */
-            margin-bottom: 20px; /* Add space below header */
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
         }
         .close {
             color: #aaa;
@@ -143,7 +166,7 @@
             box-sizing: border-box;
         }
         .modal button {
-            background-color: #17253d; /* Dark blue background color */
+            background-color: #17253d;
             color: white;
             padding: 10px 20px;
             margin: 10px 0;
@@ -153,13 +176,13 @@
             width: 100%;
         }
         .modal button:hover {
-            background-color: #111; /* Darker background on hover */
+            background-color: #111;
         }
         .g-signup {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #db4437; /* Google's red color */
+            background-color: #db4437;
             color: white;
             border: none;
             padding: 10px;
@@ -171,12 +194,27 @@
             margin-right: 10px;
         }
     </style>
-
 </head>
 <body>
     <div class="auth-links">
-        <a href="/login/">Log In</a>
-        <a href="#" id="registerLink">Register</a>
+        {% if user.is_authenticated %}
+            <div class="dropdown">
+                <button class="dropbtn">My Account</button>
+                <div class="dropdown-content">
+                    <a href="{% url 'portfolio' %}">Show my Portfolio</a>
+                    <a href="{% url 'settings' %}">Settings</a>
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer;">
+                            Log Out
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <button id="loginLink" class="auth-link">Log In</button>
+            <a href="#" id="registerLink">Register</a>
+        {% endif %}
     </div>
     <div class="container">
         <h1>Top 10 Cryptocurrencies</h1>
@@ -185,7 +223,7 @@
         </div>
     </div>
 
-    <!-- The Modal -->
+    <!-- Register Modal -->
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -204,102 +242,198 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-    <script>
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Login</h2>
+        <form id="loginForm" method="post">
+            {% csrf_token %}
+            <input type="email" id="id_username" name="username" placeholder="Email" required>
+            <input type="password" id="id_password" name="password" placeholder="Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        <div id="loginError" style="color: red;"></div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<script>
 document.addEventListener('DOMContentLoaded', function () {
     // Fetch initial data from API and initialize carousel
     fetchInitialData();
 
-    // Get the modal
-    const modal = document.getElementById("registerModal");
+    // Get the modals
+    const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById('loginModal');
 
-    // Get the button that opens the modal
-    const btn = document.getElementById("registerLink");
+    // Get the buttons that open the modals
+    const registerLink = document.getElementById("registerLink");
+    const loginLink = document.getElementById('loginLink');
 
-    // Get the <span> element that closes the modal
-    const span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-        modal.style.display = "block";
+    // Get the close buttons
+    const closeButtons = document.getElementsByClassName("close");
+      // Event listeners for opening modals
+      registerLink.onclick = function() {
+        registerModal.style.display = "block";
     }
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
+    loginLink.onclick = function() {
+        loginModal.style.display = 'block';
     }
 
-    // When the user clicks anywhere outside of the modal, close it
+
+    // Event listener for closing modals
+    Array.from(closeButtons).forEach(function(closeButton) {
+        closeButton.onclick = function() {
+            if (closeButton.parentElement.parentElement.id === "registerModal") {
+                registerModal.style.display = 'none';
+            } else {
+                loginModal.style.display = 'none';
+            }
+        }
+    });
+
+    // Event listener for clicking outside modals to close them
     window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target === registerModal) {
+            registerModal.style.display = 'none';
+        } else if (event.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    };
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if the cookie name matches the request token name
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
         }
     }
+    return cookieValue;
+}
+    // Handle Login Form submission
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
 
-    // Handle form submission
-    const registerForm = document.getElementById("registerForm");
-
-    if (registerForm) {
-    registerForm.onsubmit = function(event) {
+    loginForm.onsubmit = function(event) {
         event.preventDefault();
+        var formData = new FormData(loginForm);
 
-        const email = document.getElementById('email').value;
-        const phoneNumber = document.getElementById('phone_number').value;
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
+        fetch('/ajax_login/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')  // Make sure getCookie function correctly retrieves the CSRF token
         }
-
-        const requestData = {
-            email: email,
-            phone_number: phoneNumber,
-            password: password,
-            confirmPassword: confirmPassword,
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
-        };
-
-        fetch(registerForm.action, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': requestData.csrfmiddlewaretoken
-            },
-            body: JSON.stringify(requestData)
-        })
+})
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to register');
+                throw new Error('Network response was not ok');
             }
-            return response.json(); // Parse JSON response
+            return response.json();
         })
         .then(data => {
             if (data.success) {
-                console.log('Registration successful:', data.message);
-                modal.style.display = "none"; // Close modal on success
-                // Redirect or update UI as needed
+                window.location.reload();
             } else {
-                console.error('Registration failed:', data.errors);
-                // Display detailed error messages
-                const errors = data.errors;
-                let errorMessage = 'Failed to register:\n';
-                for (const field in errors) {
-                    if (errors.hasOwnProperty(field)) {
-                        errorMessage += `${field}: ${errors[field].join(', ')}\n`;
-                    }
-                }
-                alert(errorMessage); // Display error message
+                handleLoginError(data.error);
             }
         })
         .catch(error => {
-            console.error('Error registering user:', error);
-            alert('Failed to register. Please try again.'); // Display error message
+            console.error('Error during login:', error);
+            loginError.innerText = 'An unexpected error occurred. Please try again later.';
         });
     };
-}
+
+    function handleLoginError(error) {
+        switch (error) {
+            case 'No email provided':
+                loginError.innerText = 'Please provide an email address.';
+                break;
+            case 'Invalid password':
+                loginError.innerText = 'Invalid password. Please try again.';
+                break;
+            case 'No account matches this email':
+                loginError.innerText = 'No account matches this email.';
+                break;
+            default:
+                loginError.innerText = 'An unexpected error occurred. Please try again later.';
+        }
+    }
+
+    // Handle Register Form submission
+    const registerForm = document.getElementById("registerForm");
+
+    if (registerForm) {
+        registerForm.onsubmit = function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phone_number').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+                const requestData = {
+                    email: email,
+                    phone_number: phoneNumber,
+                    password: password,
+                    confirmPassword: confirmPassword,
+                    csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
+                };
+            fetch(registerForm.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': requestData.csrfmiddlewaretoken
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to register');
+                }
+                return response.json(); // Parse JSON response
+            })
+            .then(data => {
+                if (data.success) {
+                    console.log('Registration successful:', data.message);
+                    registerModal.style.display = "none"; // Close modal on success
+                    // Redirect or update UI as needed
+                } else {
+                    console.error('Registration failed:', data.errors);
+                    // Display detailed error messages
+                    const errors = data.errors;
+                    let errorMessage = 'Failed to register:\n';
+                    for (const field in errors) {
+                        if (errors.hasOwnProperty(field)) {
+                            errorMessage += `${field}: ${errors[field].join(', ')}\n`;
+                        }
+                    }
+                    alert(errorMessage); // Display error message
+                }
+            })
+            .catch(error => {
+                console.error('Error registering user:', error);
+                alert('Failed to register. Please try again.'); // Display error message
+            });
+        };
+    }
 
     // Handle Google Signup button click
     const gSignup = document.getElementById("gSignup");
@@ -357,6 +491,4 @@ function initializeCarousel(data) {
         carousel.slick('slickPause');
     });
 }
-    </script>
-</body>
-</html>
+</script>
