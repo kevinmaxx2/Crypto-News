@@ -1,12 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .forms import UserCreationForm
+from .forms import CustomUserCreationForm, EmailAuthenticationForm
 import requests  # Import requests module
 from django.core.cache import cache, caches
 from django.utils import timezone
 import time
-
+from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.db import IntegrityError
 # Create your views here.
 def home_view(request):
     return render(request, 'home.html')
@@ -64,29 +68,56 @@ def _format_marketcap(market_cap):
     else:
         return f"{market_cap}"
 
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('home')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid username or password'})
-    return render(request, 'login.html')
+        form = EmailAuthenticationForm(request, request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = EmailAuthenticationForm(request)
+    return render(request, 'login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True, 'message': 'Registration successful!'})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
+    
+class CustomLoginView(LoginView):
+    authentication_form = EmailAuthenticationForm
+    template_name = 'login.html'
+
+@csrf_exempt
+def register_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            form = CustomUserCreationForm({
+                'email': data['email'],
+                'phone_number': data['phone_number'],
+                'password1': data['password'],
+                'password2': data['confirmPassword']
+            })
+            if form.is_valid():
+                user = form.save()
+                return JsonResponse({'success': True, 'message': 'User registered successfully'})
+            else:
+                errors = form.errors
+                return JsonResponse({'success': False, 'errors': errors}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON request'}, status=400)
+        except IntegrityError as e:
+            return JsonResponse({'success': False, 'message': 'Username already exists.'}, status=400)
+    else:
+        return JsonResponse({'success': False, 'message': 'Method not allowed'}, status=405)
