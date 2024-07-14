@@ -7,11 +7,14 @@
     <title>Top 10 Cryptos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background-color: #eb2632;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: #2c3e50;
+            font-family: 'Roboto', Arial, sans-serif; 
             margin: 0;
             padding: 0;
             position: relative;
@@ -25,6 +28,8 @@
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 20px;
+            color: #6c3483; /* Amethyst */
+            font-family: 'Roboto', Arial, sans-serif; 
         }
         .carousel {
             background-color: rgba(23, 37, 61, 0.8);
@@ -53,8 +58,8 @@
             justify-content: space-between;
             align-items: center;
             height: 300px;
-            background-color: #ffffff;
-            color: #17253d;
+            background-color: #ecf0f1;
+            color: #17253d; /* Midnight Blue */
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -65,6 +70,8 @@
             font-weight: bold;
             margin-bottom: 10px;
             text-align: center;
+            color: #6c3483; /* Amethyst */
+            font-family: 'Roboto', Arial, sans-serif; 
         }
         .crypto-price {
             font-size: 1.5rem;
@@ -87,14 +94,16 @@
             top: 10px;
             right: 10px;
         }
-        .auth-links a {
+        .auth-links button, .auth-links a {
             background-color: #ffffff;
-            color: #17253d;
+            color: #17253d; /* Midnight Blue */
             padding: 10px 15px;
             text-decoration: none;
             border-radius: 5px;
             margin-left: 10px;
             font-weight: bold;
+            cursor: pointer;
+            border: none;
         }
         .dropdown {
             position: relative;
@@ -105,7 +114,7 @@
             position: absolute;
             background-color: #f9f9f9;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
         .dropdown-content a {
@@ -114,7 +123,9 @@
             text-decoration: none;
             display: block;
         }
-        .dropdown-content a:hover {background-color: #f1f1f1;}
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
         .dropdown:hover .dropdown-content {
             display: block;
         }
@@ -127,7 +138,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0, 0, 0, 0.4);
         }
         .modal-content {
             background-color: #fefefe;
@@ -142,6 +153,8 @@
             text-align: center;
             font-size: 1.5rem;
             margin-bottom: 20px;
+            color: #6c3483; 
+            font-family: 'Reboto', Arial, sans-serif; 
         }
         .close {
             color: #aaa;
@@ -166,7 +179,7 @@
             box-sizing: border-box;
         }
         .modal button {
-            background-color: #17253d;
+            background-color: #17253d; /* Midnight Blue */
             color: white;
             padding: 10px 20px;
             margin: 10px 0;
@@ -193,7 +206,42 @@
         .g-signup img {
             margin-right: 10px;
         }
+        .modal-header {
+            color: #6c3483; /* Amethyst */
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .modal input[type="text"],
+        .modal input[type="email"],
+        .modal input[type="password"],
+        .modal input[type="tel"],
+        .modal input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+    
+        .modal input[type="text"]:focus,
+        .modal input[type="email"]:focus,
+        .modal input[type="password"]:focus,
+        .modal input[type="tel"]:focus,
+        .modal input[type="number"]:focus {
+            border-color: #17253d; /* Midnight Blue */
+            outline: none;
+            background-color: #ffffff;
+            box-shadow: 0 0 5px rgba(23, 37, 61, 0.5);
+        }
+        #registerError {
+            display: block;
+        }
     </style>
+    
+    
 </head>
 <body>
     <div class="auth-links">
@@ -213,7 +261,7 @@
             </div>
         {% else %}
             <button id="loginLink" class="auth-link">Log In</button>
-            <a href="#" id="registerLink">Register</a>
+            <button id="registerLink" class="auth-link">Register</button>
         {% endif %}
     </div>
     <div class="container">
@@ -223,178 +271,249 @@
         </div>
     </div>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="modal-header">Sign Up</div>
-            <form id="registerForm" method="post" action="{% url 'register' %}">
-                {% csrf_token %}
-                <input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email" required>
-                <input type="text" id="phone_number" name="phone_number" placeholder="Phone Number" autocomplete="tel" required >
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-                <button type="submit">Register</button>
-            </form>
-            <button class="g-signup" id="gSignup">
-                <img src="https://img.icons8.com/color/16/000000/google-logo.png"/> Sign up with Google
-            </button>
-        </div>
-    </div>
-
-<!-- Login Modal -->
-<div id="loginModal" class="modal">
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Login</h2>
-        <form id="loginForm" method="post">
+        <div class="modal-header">Sign Up</div>
+        <form id="registerForm" method="post" action="{% url 'register' %}">
             {% csrf_token %}
-            <input type="email" id="id_username" name="username" placeholder="Email" required>
-            <input type="password" id="id_password" name="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
+            <input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email" required>
+            <input type="text" id="phone_number" name="phone_number" placeholder="Phone Number" autocomplete="tel" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
         </form>
-        <div id="loginError" style="color: red;"></div>
+        <div id="registerError" class="error-message" style="color: red; font-weight: bold; margin-top: 10px;"></div>
+        <button class="g-signup" id="gSignup">
+            <img src="https://img.icons8.com/color/16/000000/google-logo.png"/> Sign up with Google
+        </button>
     </div>
 </div>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">Login</div>
+            <form id="loginForm" method="post">
+                {% csrf_token %}
+                <input type="email" id="id_username" name="username" placeholder="Email" required>
+                <input type="password" id="id_password" name="password" placeholder="Password" required>
+                <button type="submit">Log In</button>
+            </form>
+            <div id="loginError" style="color: red; font-weight: bold; margin-top: 10px;"></div>
+        </div>
+    </div>
+</body>
+</html>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Fetch initial data from API and initialize carousel
-    fetchInitialData();
-
-    // Get the modals
-    const registerModal = document.getElementById("registerModal");
-    const loginModal = document.getElementById('loginModal');
-
-    // Get the buttons that open the modals
-    const registerLink = document.getElementById("registerLink");
-    const loginLink = document.getElementById('loginLink');
-
-    // Get the close buttons
-    const closeButtons = document.getElementsByClassName("close");
-      // Event listeners for opening modals
-      registerLink.onclick = function() {
-        registerModal.style.display = "block";
-    }
-
-    loginLink.onclick = function() {
-        loginModal.style.display = 'block';
-    }
-
-
-    // Event listener for closing modals
-    Array.from(closeButtons).forEach(function(closeButton) {
-        closeButton.onclick = function() {
-            if (closeButton.parentElement.parentElement.id === "registerModal") {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch initial data from API and initialize carousel
+        fetchInitialData();
+    
+        // Get the modals
+        const registerModal = document.getElementById("registerModal");
+        const loginModal = document.getElementById('loginModal');
+    
+        // Get the buttons that open the modals
+        const registerLink = document.getElementById("registerLink");
+        const loginLink = document.getElementById('loginLink');
+    
+        // Get the close buttons
+        const closeButtons = document.getElementsByClassName("close");
+    
+        // Event listeners for opening modals
+        registerLink.onclick = function() {
+            registerModal.style.display = "block";
+        }
+    
+        loginLink.onclick = function() {
+            loginModal.style.display = 'block';
+        }
+    
+        // Event listener for closing modals
+        Array.from(closeButtons).forEach(function(closeButton) {
+            closeButton.onclick = function() {
+                if (closeButton.parentElement.parentElement.id === "registerModal") {
+                    registerModal.style.display = 'none';
+                } else {
+                    loginModal.style.display = 'none';
+                }
+            }
+        });
+    
+        // Event listener for clicking outside modals to close them
+        window.onclick = function(event) {
+            if (event.target === registerModal) {
                 registerModal.style.display = 'none';
-            } else {
+            } else if (event.target === loginModal) {
                 loginModal.style.display = 'none';
             }
-        }
-    });
-
-    // Event listener for clicking outside modals to close them
-    window.onclick = function(event) {
-        if (event.target === registerModal) {
-            registerModal.style.display = 'none';
-        } else if (event.target === loginModal) {
-            loginModal.style.display = 'none';
-        }
-    };
-
-    function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Check if the cookie name matches the request token name
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        };
+    
+        // Function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if the cookie name matches the request token name
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
         }
-    }
-    return cookieValue;
-}
-    // Handle Login Form submission
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();  // Prevent the form from submitting the traditional way
-
-    const formData = new FormData(this);
-    fetch('/ajax_login/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': getCookie('csrftoken')  // Ensure getCookie function retrieves the CSRF token
+    
+        // Handle Login Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting the traditional way
+    
+            const formData = new FormData(this);
+            fetch('/ajax_login/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')  // Ensure getCookie function retrieves the CSRF token
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);  // Debugging log
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);  // Debugging log
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    document.getElementById('loginError').innerText = data.error;
+                }
+            })
+            .catch(error => {
+                console.error('Error during login:', error);
+                document.getElementById('loginError').innerText = 'An unexpected error occurred. Please try again later.';
+            });
+        });
+    
+        // Handle Register Form submission
+        const registerForm = document.getElementById("registerForm");
+    
+        if (registerForm) {
+            registerForm.onsubmit = function(event) {
+                event.preventDefault();
+    
+                const email = document.getElementById('email').value;
+                const phoneNumber = document.getElementById('phone_number').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+    
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    displayErrorMessage('Passwords do not match!');
+                    return;
+                }
+            // Validate password format
+                const passwordValidationResult = validatePassword(password);
+                if (passwordValidationResult !== true) {
+                    displayErrorMessage(passwordValidationResult);
+                    return;
+                }
+                // Clear previous error messages
+                clearErrorMessage();
+    
+                // Validate email format
+                if (!isValidEmail(email)) {
+                    displayErrorMessage('Invalid email format.');
+                    return;
+                }
+    
+                // Validate phone number format
+                if (!isValidPhoneNumber(phoneNumber)) {
+                    displayErrorMessage('Invalid phone number format.');
+                    return;
+                }
+    
+                // Check for duplicated email and phone number
+                checkDuplicate(email, phoneNumber);
+            };
         }
-    })
-    .then(response => {
-        console.log('Response status:', response.status);  // Debugging log
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        // Function to validate password format
+        function validatePassword(password) {
+            // Regular expression for password validation
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{8,80}$/;
+            
+            if (!passwordRegex.test(password)) {
+                return 'Password must contain at least 1 uppercase letter, 1 number, and be between 8 to 80 characters long.';
+            }
+
+            return true; // Password is valid
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Response data:', data);  // Debugging log
-        if (data.success) {
-            window.location.reload();
-        } else {
-            document.getElementById('loginError').innerText = data.error;
+        // Function to check for duplicated email and phone number
+        function checkDuplicate(email, phoneNumber) {
+            const requestData = {
+                email: email,
+                phone_number: phoneNumber,
+                csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
+            };
+    
+            fetch('/check_duplicate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': requestData.csrfmiddlewaretoken
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to check duplicates');
+                }
+                return response.json(); // Parse JSON response
+            })
+            .then(data => {
+                console.log('Duplicate check response:', data);
+                if (data.email_exists) {
+                    displayErrorMessage('Email already exists. Please choose a different one.');
+                } else if (data.phone_number_exists) {
+                    displayErrorMessage('Phone number already exists. Please choose a different one.');
+                } else {
+                    // If no duplicates, proceed with registration
+                    submitRegistrationForm();
+                }
+            })
+            .catch(error => {
+                console.error('Error checking duplicates:', error);
+                displayErrorMessage('Failed to check duplicates. Please try again.');
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error during login:', error);
-        document.getElementById('loginError').innerText = 'An unexpected error occurred. Please try again later.';
-    });
-});
-
-    function handleLoginError(error) {
-        switch (error) {
-            case 'No email provided':
-                loginError.innerText = 'Please provide an email address.';
-                break;
-            case 'Invalid password':
-                loginError.innerText = 'Invalid password. Please try again.';
-                break;
-            case 'No account matches this email':
-                loginError.innerText = 'No account matches this email.';
-                break;
-            default:
-                loginError.innerText = 'An unexpected error occurred. Please try again later.';
-        }
-    }
-
-    // Handle Register Form submission
-    const registerForm = document.getElementById("registerForm");
-
-    if (registerForm) {
-        registerForm.onsubmit = function(event) {
-            event.preventDefault();
-
+    
+        // Function to submit registration form after validation
+        function submitRegistrationForm() {
             const email = document.getElementById('email').value;
             const phoneNumber = document.getElementById('phone_number').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (password !== confirmPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-                const requestData = {
-                    email: email,
-                    phone_number: phoneNumber,
-                    password: password,
-                    confirmPassword: confirmPassword,
-                    csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
-                };
+    
+            const requestData = {
+                email: email,
+                phone_number: phoneNumber,
+                password: password,
+                confirmPassword: confirmPassword,
+                csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
+            };
+    
             fetch(registerForm.action, {
                 method: 'POST',
                 headers: {
@@ -410,84 +529,126 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json(); // Parse JSON response
             })
             .then(data => {
+                console.log('Registration response:', data);
                 if (data.success) {
                     console.log('Registration successful:', data.message);
                     registerModal.style.display = "none"; // Close modal on success
                     // Redirect or update UI as needed
                 } else {
                     console.error('Registration failed:', data.errors);
-                    // Display detailed error messages
-                    const errors = data.errors;
-                    let errorMessage = 'Failed to register:\n';
-                    for (const field in errors) {
-                        if (errors.hasOwnProperty(field)) {
-                            errorMessage += `${field}: ${errors[field].join(', ')}\n`;
-                        }
-                    }
-                    alert(errorMessage); // Display error message
+                    // Handle registration errors
+                    handleRegisterError(data.errors);
                 }
             })
             .catch(error => {
                 console.error('Error registering user:', error);
-                alert('Failed to register. Please try again.'); // Display error message
+                displayErrorMessage('Failed to register. Please try again.');
             });
-        };
-    }
-
-    // Handle Google Signup button click
-    const gSignup = document.getElementById("gSignup");
-    if (gSignup) {
-        gSignup.onclick = function() {
-            // Add your Google OAuth2 logic here
-            alert("Google Signup clicked!");
         }
-    }
-});
-
-function fetchInitialData() {
-    fetch('/api/crypto-data/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch crypto data');
+    
+        // Function to handle registration errors
+        function handleRegisterError(errors) {
+            const registerErrorElement = document.getElementById('registerError');
+            let errorMessage = '';
+    
+            if (errors.email && errors.email.length > 0) {
+                errorMessage = errors.email[0]; // Assuming only one error message for simplicity
+            } else if (errors.phone_number && errors.phone_number.length > 0) {
+                errorMessage = errors.phone_number[0]; // Assuming only one error message for simplicity
+            } else {
+                errorMessage = 'Failed to register. Please check your details.';
             }
-            return response.json();
-        })
-        .then(data => {
-            initializeCarousel(data);
-        })
-        .catch(error => console.error('Error fetching crypto data:', error));
-}
-
-function initializeCarousel(data) {
-    const carousel = $('#cryptoCarousel');
-    data.slice(0, 10).forEach(crypto => {
-        const carouselItem = `
-            <div class="carousel-item">
-                <img class="crypto-image" src="${crypto.image}" alt="${crypto.name} Image">
-                <div class="crypto-name">${crypto.name}</div>
-                <div class="crypto-price">${crypto.price} USD</div>
-                <div class="crypto-marketcap">Market Cap: ${crypto.marketcap}</div>
-            </div>
-        `;
-        carousel.append(carouselItem);
+    
+            registerErrorElement.innerHTML = errorMessage; // Use innerHTML to render HTML content
+            registerErrorElement.style.display = 'block'; // Ensure the error message is visible
+        }
+    
+        // Function to display error message
+        function displayErrorMessage(message) {
+            const errorElement = document.getElementById('registerError');
+            errorElement.innerHTML = message;
+            errorElement.style.display = 'block';
+        }
+    
+        // Function to clear error message
+        function clearErrorMessage() {
+            const errorElement = document.getElementById('registerError');
+            errorElement.innerHTML = '';
+            errorElement.style.display = 'none';
+        }
+    
+        // Function to validate email format (replace with your actual email validation logic)
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    
+        // Function to validate phone number format (replace with your actual phone validation logic)
+        function isValidPhoneNumber(phoneNumber) {
+            const phoneRegex = /^[\d()+\s-]{0,20}$/;
+            return phoneRegex.test(phoneNumber);
+        }
+    
+        // Handle Google Signup button click
+        const gSignup = document.getElementById("gSignup");
+        if (gSignup) {
+            gSignup.onclick = function() {
+                // Add your Google OAuth2 logic here
+                alert("Google Signup clicked!");
+            }
+        }
     });
-
-    // Initialize Slick carousel with autoplay
-    carousel.slick({
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 10000, // 10 seconds
-        prevArrow: '<button type="button" class="slick-prev">&#9664;</button>',
-        nextArrow: '<button type="button" class="slick-next">&#9654;</button>'
+    
+    function fetchInitialData() {
+        fetch('/api/crypto-data/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch crypto data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                initializeCarousel(data);
+            })
+            .catch(error => console.error('Error fetching crypto data:', error));
+    }
+    
+    function initializeCarousel(data) {
+        const carousel = $('#cryptoCarousel');
+        data.slice(0, 10).forEach(crypto => {
+            const carouselItem = `
+                <div class="carousel-item">
+                    <img class="crypto-image" src="${crypto.image}" alt="${crypto.name} Image">
+                    <div class="crypto-name">${crypto.name}</div>
+                    <div class="crypto-price">${crypto.price} USD</div>
+                    <div class="crypto-marketcap">Market Cap: ${crypto.marketcap}</div>
+                </div>
+            `;
+            carousel.append(carouselItem);
+        });
+    
+        // Initialize Slick carousel with autoplay
+        carousel.slick({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 10000, // 10 seconds
+            prevArrow: '<button type="button" class="slick-prev">&#9664;</button>',
+            nextArrow: '<button type="button" class="slick-next">&#9654;</button>'
+        });
+    
+        // Pause autoplay on arrow click
+        carousel.on('click', '.slick-prev, .slick-next', function() {
+            carousel.slick('slickPause');
+        });
+    }
+    
+    // Event listener to format phone number input
+    document.getElementById('phone_number').addEventListener('input', function (e) {
+        var value = e.target.value;
+        e.target.value = value.replace(/[^\d\+\(\)\s-]/g, '');
     });
-
-    // Pause autoplay on arrow click
-    carousel.on('click', '.slick-prev, .slick-next', function() {
-        carousel.slick('slickPause');
-    });
-}
-</script>
+    </script>

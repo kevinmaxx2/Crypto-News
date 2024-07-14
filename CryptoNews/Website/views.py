@@ -13,9 +13,10 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
+from django.views.decorators.http import require_POST
 from .forms import CustomUserCreationForm, EmailAuthenticationForm
-
+from django.contrib.auth import get_user_model
+from Website.models import CustomUser
 # Create your views here.
 def home_view(request):
     return render(request, 'home.html')
@@ -63,7 +64,11 @@ def _format_price(price):
     if price_float % 1 >= 0.60:
         return f"{int(price_float) + 1:,}"
     else:
-        return f"{int(price_float):,}"
+        # Show two decimal places if price is lower than 100
+        if price_float < 100:
+            return f"{price_float:.2f}"
+        else:
+            return f"{int(price_float):,}"
 
 def _format_marketcap(market_cap):
     if market_cap >= 1_000_000_000:
@@ -89,6 +94,7 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+@require_POST
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -96,7 +102,13 @@ def register(request):
             form.save()
             return JsonResponse({'success': True, 'message': 'Registration successful!'})
         else:
-            return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+            errors = form.errors.as_json()
+            # Customize error messages for specific fields if needed
+            if 'email' in form.errors:
+                errors['email'] = ['Email already in use. Please choose a different one.']
+            if 'phone_number' in form.errors:
+                errors['phone_number'] = ['Phone number already in use. Please choose a different one.']
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
     
 class CustomLoginView(LoginView):
@@ -163,3 +175,19 @@ def ajax_login_view(request):
 
     logger.debug("Method not allowed")
     return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def check_duplicate(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email', None)
+        phone_number = data.get('phone_number', None)
+
+        response_data = {
+            'email_exists': CustomUser.objects.filter(email=email).exists() if email else False,
+            'phone_number_exists': CustomUser.objects.filter(phone_number=phone_number).exists() if phone_number else False,
+        }
+
+        return JsonResponse(response_data)
+
+    # Handle other HTTP methods if needed
+    return JsonResponse({'error': 'POST request required'}, status=400)

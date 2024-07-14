@@ -2,21 +2,17 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import CustomUser
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     phone_number = forms.CharField(max_length=15, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, label='Password')
-    confirmPassword = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
+    password1 = forms.CharField(widget=forms.PasswordInput, label='Password')
+    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'phone_number', 'password', 'confirmPassword')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'] = self.fields.pop('password')
-        self.fields['password2'] = self.fields.pop('confirmPassword')
+        fields = ('email', 'phone_number', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -38,10 +34,16 @@ class CustomUserCreationForm(UserCreationForm):
 
         return cleaned_data
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already in use. Please choose a different one.")
+        return email
+
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
         if CustomUser.objects.filter(phone_number=phone_number).exists():
-            raise forms.ValidationError("Phone number already in use.")
+            raise forms.ValidationError("Phone number already in use. Please choose a different one.")
         return phone_number
 
 class CustomUserChangeForm(UserChangeForm):
