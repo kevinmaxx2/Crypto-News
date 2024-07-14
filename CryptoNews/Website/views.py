@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from .forms import CustomUserCreationForm, EmailAuthenticationForm
 
@@ -141,25 +141,25 @@ class CustomLogoutView(LogoutView):
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+@csrf_protect
 def ajax_login_view(request):
     logger.debug(f"Request method: {request.method}")
     logger.debug(f"Request headers: {request.headers}")
 
-    if request.method == 'POST' and request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         logger.debug(f"Username: {username}, Password: {password}")
 
-        # Your authentication logic here
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            # Authentication successful
+            logger.debug("Authentication successful")
+            login(request, user)  # Log the user in
             return JsonResponse({'success': True})
         else:
-            # Authentication failed
+            logger.debug("Authentication failed")
             return JsonResponse({'success': False, 'error': 'Invalid email or password. Please try again.'})
 
-    # Handle GET requests or non-AJAX requests if necessary
+    logger.debug("Method not allowed")
     return JsonResponse({'error': 'Method not allowed'}, status=405)

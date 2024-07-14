@@ -322,39 +322,38 @@ document.addEventListener('DOMContentLoaded', function () {
     return cookieValue;
 }
     // Handle Login Form submission
-    const loginForm = document.getElementById('loginForm');
-    const loginError = document.getElementById('loginError');
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent the form from submitting the traditional way
 
-    loginForm.onsubmit = function(event) {
-        event.preventDefault();
-        var formData = new FormData(loginForm);
-
-        fetch('/ajax_login/', {
+    const formData = new FormData(this);
+    fetch('/ajax_login/', {
         method: 'POST',
         body: formData,
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': getCookie('csrftoken')  // Make sure getCookie function correctly retrieves the CSRF token
+            'X-CSRFToken': getCookie('csrftoken')  // Ensure getCookie function retrieves the CSRF token
         }
-})
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                window.location.reload();
-            } else {
-                handleLoginError(data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error during login:', error);
-            loginError.innerText = 'An unexpected error occurred. Please try again later.';
-        });
-    };
+    })
+    .then(response => {
+        console.log('Response status:', response.status);  // Debugging log
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);  // Debugging log
+        if (data.success) {
+            window.location.reload();
+        } else {
+            document.getElementById('loginError').innerText = data.error;
+        }
+    })
+    .catch(error => {
+        console.error('Error during login:', error);
+        document.getElementById('loginError').innerText = 'An unexpected error occurred. Please try again later.';
+    });
+});
 
     function handleLoginError(error) {
         switch (error) {
