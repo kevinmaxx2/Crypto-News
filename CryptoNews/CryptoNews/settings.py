@@ -161,6 +161,6 @@ AUTH_USER_MODEL = 'Website.CustomUser'
 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "'unsafe-eval'", "https://code.jquery.com", "https://cdnjs.cloudflare.com")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com")
 CSP_IMG_SRC = ("'self'", "https://coin-images.coingecko.com", "https://img.icons8.com", "https://cdnjs.cloudflare.com")
-CSP_FONT_SRC = ("'self'", "https://use.typekit.net", "https://cdnjs.cloudflare.com", "data:")
+CSP_FONT_SRC = ("'self'", "https://use.typekit.net", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com", "data:")

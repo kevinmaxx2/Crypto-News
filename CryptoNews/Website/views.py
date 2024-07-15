@@ -22,36 +22,71 @@ def home_view(request):
     return render(request, 'home.html')
 
 cache = caches['default']
+def fetch_and_transform_crypto_data():
+    url = 'https://api.coingecko.com/api/v3/coins/markets'
+    params = {
+        'vs_currency': 'usd',
+        'order': 'market_cap_desc',
+        'per_page': 30,
+        'page': 1,
+        'sparkline': False,
+        'price_change_percentage': '24h'  # Include 24-hour price change percentage
+    }
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Raise exception for bad status codes
+        data = response.json()
+
+        transformed_data = []
+        for crypto in data:
+            # Ensure 'current_price' and 'price_change_percentage_24h' are present
+            if 'current_price' in crypto:
+                price = _format_price(crypto['current_price'])
+            else:
+                price = 'N/A'  # Handle case where price is missing
+
+            if 'price_change_percentage_24h' in crypto:
+                price_change_percentage_24h = crypto['price_change_percentage_24h']
+            else:
+                price_change_percentage_24h = 'N/A'  # Handle case where percentage change is missing
+
+            transformed_data.append({
+                'name': crypto.get('name', ''),
+                'symbol': crypto.get('symbol', '').upper(),
+                'price': price,
+                'price_change_percentage_24h': price_change_percentage_24h,  # Include 24-hour percentage change
+                'marketcap': _format_marketcap(crypto.get('market_cap', 0)),  # Replace with your market cap formatting function
+                'image': crypto.get('image', '')
+                # Add more fields as needed for list format
+            })
+
+        return transformed_data
+
+    except requests.RequestException as e:
+        return {'error': f'Error fetching data: {str(e)}'}
+
 def get_crypto_data(request):
     cache_key = 'crypto_data'
     cache_time = 300  # Cache data for 5 minutes (300 seconds)
     data = cache.get(cache_key)
 
     if not data:
-        url = 'https://api.coingecko.com/api/v3/coins/markets'
-        params = {
-            'vs_currency': 'usd',
-            'order': 'market_cap_desc',
-            'per_page': 10,
-            'page': 1,
-            'sparkline': False,
-            'price_change_percentage': '24h'
-        }
-        response = requests.get(url, params=params)
-        data = response.json()
+        transformed_data = fetch_and_transform_crypto_data()
+        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
+            cache.set(cache_key, transformed_data, cache_time)
+        data = transformed_data
 
-        transformed_data = [
-            {
-                'name': crypto['name'],
-                'symbol': crypto['symbol'].upper(),
-                'price': _format_price(crypto['current_price']),
-                'marketcap': _format_marketcap(crypto['market_cap']),
-                'image': crypto['image']
-            }
-            for crypto in data
-        ]
+    return JsonResponse(data, safe=False)
 
-        cache.set(cache_key, transformed_data, cache_time)
+def get_crypto_list_data(request):
+    cache_key = 'crypto_data'
+    cache_time = 300  # Cache data for 5 minutes (300 seconds)
+    data = cache.get(cache_key)
+
+    if not data:
+        transformed_data = fetch_and_transform_crypto_data()
+        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
+            cache.set(cache_key, transformed_data, cache_time)
         data = transformed_data
 
     return JsonResponse(data, safe=False)

@@ -89,6 +89,12 @@
             margin-right: auto;
             display: block;
         }
+        #cryptoTable tbody .crypto-image {
+        max-width: 50px; /* Set the maximum width to half of the current size */
+        margin-right: 5px; /* Adjust spacing as needed */
+        display:block;
+    
+        }
         .auth-links {
             position: absolute;
             top: 10px;
@@ -239,7 +245,84 @@
         #registerError {
             display: block;
         }
-    </style>
+    /* Table container styling */
+    .table-container {
+        max-width: 100%;
+        overflow-x: auto;
+        margin-top: 20px;
+    }
+
+    /* Table styles */
+    .table {
+        width: 100%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #2c3e50; /* Dark background color */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        color: #ffffff; /* Text color for table */
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #34495e; /* Darker border color */
+    }
+
+    .table th {
+        background-color: #34495e; /* Darker background color for headers */
+        color: #ffffff; /* Header text color */
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .table td {
+        background-color: #2c3e50; /* Dark background color for table data */
+        color: #ffffff; /* Text color for table data */
+        font-size: 0.9rem;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #34495e; /* Darker alternate row background color */
+    }
+
+    .table tbody tr:hover {
+        background-color: #3d566e; /* Slightly lighter hover background color */
+    }
+    .text-success {
+    color: green;
+}
+
+.text-danger {
+    color: red;
+}
+#cryptoTable tbody td {
+    text-align: center;
+    font-size: 1.2rem; /* Adjust font size as needed */
+    vertical-align: middle; /* Align text vertically in the middle */
+}
+#cryptoTable tbody td:nth-child(2) {
+    text-align: center;
+    font-size: 1.2rem; /* Adjust font size as needed */
+    vertical-align: middle; /* Align text vertically in the middle */
+    padding-top: 10px; /* Adjust to raise the text */
+}
+#cryptoTable tbody td:nth-child(2),
+#cryptoTable tbody td:nth-child(3),
+#cryptoTable tbody td:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.2rem; /* Adjust font size as needed */
+}
+#cryptoList tbody td {
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.2rem; /* Adjust font size as needed */
+}
+
+</style>
     
     
 </head>
@@ -265,12 +348,25 @@
         {% endif %}
     </div>
     <div class="container">
-        <h1>Top 10 Cryptocurrencies</h1>
+        <h1>Keep Full Control of your Crypto Portfolio</h1>
         <div id="cryptoCarousel" class="carousel">
             <!-- Dynamic content will be inserted here -->
         </div>
     </div>
-
+    <table id="cryptoTable" class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">24h %</th>
+                <th scope="col">Market Cap</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be dynamically populated here -->
+        </tbody>
+    </table>
 <!-- Register Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
@@ -498,7 +594,7 @@
                 displayErrorMessage('Failed to check duplicates. Please try again.');
             });
         }
-    
+        
         // Function to submit registration form after validation
         function submitRegistrationForm() {
             const email = document.getElementById('email').value;
@@ -598,7 +694,39 @@
             }
         }
     });
-    
+    fetch('/api/crypto-list-data/')
+        .then(response => response.json())
+        .then(data => {
+            console.log('List data:', data);
+            populateCryptoTable(data);
+        })
+        .catch(error => {
+            console.error('Error fetching list data:', error);
+            // Handle errors fetching list data
+        });
+
+    function populateCryptoTable(data) {
+    console.log('Populating table with data:', data);
+    const tableBody = document.querySelector('#cryptoTable tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    data.forEach((crypto, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <th scope="row">${index + 1}</th>
+            <td><img src="${crypto.image}" alt="${crypto.name}" class="crypto-image">${crypto.name} (${crypto.symbol})</td>
+            <td>${crypto.price}</td>
+            <td>${crypto.price_change_percentage_24h !== undefined && crypto.price_change_percentage_24h !== null
+                ? (crypto.price_change_percentage_24h >= 0
+                    ? `<span class="text-success">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`
+                    : `<span class="text-danger">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`)
+                : 'N/A'
+            }</td>
+            <td>${crypto.marketcap}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
     function fetchInitialData() {
         fetch('/api/crypto-data/')
             .then(response => {
