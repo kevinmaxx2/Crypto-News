@@ -27,7 +27,7 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
             display: inline-block;
             margin-bottom: 20px;
-}
+        }
         .portfolio-item {
             display: flex;
             justify-content: space-between;
@@ -182,7 +182,6 @@
             font-size: 1rem;
             background-color: #f9f9f9;
         }
-    
         .modal input[type="text"]:focus,
         .modal input[type="email"]:focus,
         .modal input[type="password"]:focus,
@@ -212,42 +211,47 @@
             font-size: 1.3rem;
             text-align: center;
             background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
-            padding: 5px 10px;
+            padding: 10px 15px; /* Adjust padding for better appearance */
             border-radius: 5px;
             display: block;
-            margin-bottom: 10px;
-        }
+            margin: 0 auto 10px; /* Center horizontally and add margin below */
+            width: 270px; /* Adjust width to your preference */
+            box-sizing: border-box; /* Include padding and border in width */
+}
+
         input[type="text"], select {
-    color: #000000;
-    font-size: 1.2rem;
-    text-align: center;
-    background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    display: block;
-    margin-bottom: 20px;
-    width: 100%; /* Ensures full width */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            color: #000000;
+            font-size: 1.2rem;
+            text-align: center;
+            background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
+            padding: 10px 15px; /* Adjust padding for better appearance */
+            border: none;
+            border-radius: 5px;
+            display: block;
+            margin: 0 auto 20px; /* Center horizontally and add margin below */
+            width: 270px; /* Adjust width to your preference */
+            box-sizing: border-box; /* Include padding and border in width */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-button[type="submit"] {
-    color: #ffffff;
-    font-size: 1.3rem;
-    background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    margin-top: 20px;
-    width: 100%; /* Ensures full width */
-    text-align: center;
-}
-
-button[type="submit"]:hover {
-    background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
-}
+        button[type="submit"] {
+            color: #ffffff;
+            font-size: 1.3rem;
+            background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin-top: 20px;
+            margin-left: auto; /* Center the button */
+            margin-right: auto; /* Center the button */
+            width: 50%; /* Adjusted to 50% */
+            text-align: center;
+        }
+        button[type="submit"]:hover {
+            background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
+        }
+    </style>
     </style>
 </head>
 <body>
