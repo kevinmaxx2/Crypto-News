@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Portfolio</title>
+    <style>
+        /* Add your CSS here */
+    </style>
+</head>
+<body>
+    <h1>My Portfolio</h1>
+    
+    <!-- Form to add to portfolio -->
+    <form method="post" action="{% url 'add_to_portfolio' %}">
+        {% csrf_token %}
+        <label for="crypto_symbol">Select Cryptocurrency:</label>
+        <select name="crypto_symbol" id="crypto_symbol">
+            {% for crypto in dropdown_data %}
+                <option value="{{ crypto.symbol }}">{{ crypto.symbol }}</option>
+            {% endfor %}
+        </select>
+        <label for="amount_owned">Amount Owned:</label>
+        <input type="text" name="amount_owned" id="amount_owned">
+        <label for="purchase_price">Purchase Price (USD):</label>
+        <input type="text" name="purchase_price" id="purchase_price">
+        <button type="submit">Add to Portfolio</button>
+    </form>
+
+    <h2>Current Portfolio</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Cryptocurrency</th>
+                <th>Amount Owned</th>
+                <th>Purchase Price (USD)</th>
+                <th>Current Value (USD)</th>
+                <th>Profit/Loss (USD)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for portfolio in portfolios %}
+                <tr>
+                    <td>{{ portfolio.crypto_name }}</td>
+                    <td>{{ portfolio.amount_owned }}</td>
+                    <td>{{ portfolio.purchase_price }}</td>
+                    <td>{{ portfolio.current_value }}</td>
+                    <td>{{ portfolio.profit_loss }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

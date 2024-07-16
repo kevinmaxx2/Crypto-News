@@ -22,3 +22,13 @@ class CustomUser(AbstractUser):
         help_text='Specific permissions for this user.',
         verbose_name='user permissions',
     )
+
+class Portfolio(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    crypto_name = models.CharField(max_length=100)
+    amount_owned = models.DecimalField(max_digits=20, decimal_places=8)
+    purchase_price = models.DecimalField(max_digits=20, decimal_places=2)
+    purchase_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.crypto_name}"

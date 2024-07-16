@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache, caches
 from django.db import IntegrityError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
@@ -17,6 +17,8 @@ from django.views.decorators.http import require_POST
 from .forms import CustomUserCreationForm, EmailAuthenticationForm
 from django.contrib.auth import get_user_model
 from Website.models import CustomUser
+from .models import Portfolio
+from .forms import PortfolioForm 
 # Create your views here.
 def home_view(request):
     return render(request, 'home.html')
@@ -91,7 +93,78 @@ def get_crypto_list_data(request):
 
     return JsonResponse(data, safe=False)
 
+@login_required
+def get_portfolio_data(request):
+    cache_key = 'crypto_data'
+    cache_time = 300  # Cache data for 5 minutes (300 seconds)
+    data = cache.get(cache_key)
+
+    if not data:
+        transformed_data = fetch_and_transform_crypto_data()
+        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
+            cache.set(cache_key, transformed_data, cache_time)
+        data = transformed_data
+
+    portfolios = Portfolio.objects.filter(user=request.user)
+    portfolio_data = []
+    for portfolio in portfolios:
+        portfolio_data.append({
+            'crypto_name': portfolio.crypto_name,
+            'amount_owned': portfolio.amount_owned,
+            'purchase_price': portfolio.purchase_price,
+            'current_value': _calculate_current_value(portfolio.crypto_name, data),  # Function to calculate current value
+            'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, data)  # Function to calculate profit/loss
+        })
+    
+    # Ensure data is a dictionary before adding 'portfolio' key
+    if not isinstance(data, dict):
+        data = {'data': data}  # Or handle appropriately if data is a list or another type
+    
+    data['portfolio'] = portfolio_data
+
+    return JsonResponse(data, safe=False)
+
+def fetch_dropdown_data():
+    transformed_data = fetch_and_transform_crypto_data()  # Fetch cryptocurrency data
+    dropdown_data = [{'symbol': crypto['symbol']} for crypto in transformed_data]
+    return dropdown_data
+
+def _calculate_current_value(crypto_name, crypto_data, amount_owned):
+    for crypto in crypto_data:
+        if crypto['symbol'].upper() == crypto_name.upper():
+            current_price = float(crypto['price'].replace(',', '').replace('$', ''))  # Extract and convert current price
+            amount_owned = float(amount_owned)
+            return round(amount_owned * current_price, 2)
+    return 0
+
+def _calculate_profit_loss(crypto_name, purchase_price, crypto_data, amount_owned):
+    for crypto in crypto_data:
+        if crypto['symbol'].upper() == crypto_name.upper():
+            current_price = float(crypto['price'].replace(',', '').replace('$', ''))  # Extract and convert current price
+            amount_owned = float(amount_owned)
+            purchase_price = float(purchase_price)  # Convert purchase price to float
+            return round((current_price - purchase_price) * amount_owned, 2)
+    return 0
+@login_required
+def add_to_portfolio(request):
+    if request.method == 'POST':
+        crypto_symbol = request.POST.get('crypto_symbol')
+        amount_owned = request.POST.get('amount_owned')
+        purchase_price = request.POST.get('purchase_price')
+
+        # Validate and save the form data
+        if crypto_symbol and amount_owned and purchase_price:
+            Portfolio.objects.create(
+                user=request.user,
+                crypto_name=crypto_symbol,
+                amount_owned=amount_owned,
+                purchase_price=purchase_price
+            )
+            return redirect('portfolio')  # Redirect to the portfolio page
+
+    return render(request, 'portfolio.html')
 def _format_price(price):
+
     # Convert price to float
     price_float = float(price)
     
@@ -177,7 +250,48 @@ def register_view(request):
 
 @login_required
 def portfolio_view(request):
-    return render(request, 'portfolio.html')
+    portfolios = Portfolio.objects.filter(user=request.user)
+    portfolio_data = []
+
+    
+    crypto_data = fetch_and_transform_crypto_data()
+
+    for portfolio in portfolios:
+        portfolio_data.append({
+            'crypto_name': portfolio.crypto_name,
+            'amount_owned': portfolio.amount_owned,
+            'purchase_price': portfolio.purchase_price,
+            'current_value': _calculate_current_value(portfolio.crypto_name, crypto_data, portfolio.amount_owned),
+            'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
+        })
+
+    dropdown_data = fetch_dropdown_data()  # Ensure this function returns the correct data
+    context = {
+        'portfolios': portfolio_data,
+        'dropdown_data': dropdown_data
+    }
+    print(f"Portfolio Data: {portfolio_data}")
+    return render(request, 'portfolio.html', context)
+
+@login_required
+def create_portfolio_view(request):
+    if request.method == 'POST':
+        form = PortfolioForm(request.POST)
+        if form.is_valid():
+            portfolio = form.save(commit=False)
+            portfolio.user = request.user
+            portfolio.save()
+            return JsonResponse({'success': True, 'message': 'Portfolio entry added successfully'})
+        else:
+            errors = form.errors
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+    else:
+        form = PortfolioForm()
+    
+    context = {
+        'form': form,
+    }
+    return render(request, 'create_portfolio.html', context)
 
 @login_required
 def settings_view(request):

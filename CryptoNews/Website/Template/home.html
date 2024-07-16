@@ -321,7 +321,61 @@
     vertical-align: middle;
     font-size: 1.2rem; /* Adjust font size as needed */
 }
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f8f9fa; /* Off-White */
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+.dropdown-content a {
+    color: #17253d; /* Midnight Blue */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #ecf0f1;
+}
+.dropdown-content a:hover {
+    background-color: #ecf0f1; /* Light Silver */
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropbtn {
+    background-color: #6c3483; /* Amethyst */
+    color: #ffffff; /* White text */
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+.dropdown:hover .dropbtn {
+    background-color: #8e44ad; /* Dark Purple */
+}
 
+/* Style the logout button inside the dropdown */
+.dropdown-content form button {
+    background: none;
+    border: none;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 12px 16px;
+    display: block;
+    width: 100%;
+    text-align: left;
+}
+.dropdown-content form button:hover {
+    background-color: #f1f1f1; /* Light grey background on hover */
+}
 </style>
     
     
@@ -334,11 +388,9 @@
                 <div class="dropdown-content">
                     <a href="{% url 'portfolio' %}">Show my Portfolio</a>
                     <a href="{% url 'settings' %}">Settings</a>
-                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    <a href="#" onclick="document.getElementById('logout-form').submit();">Log Out</a>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
                         {% csrf_token %}
-                        <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer;">
-                            Log Out
-                        </button>
                     </form>
                 </div>
             </div>

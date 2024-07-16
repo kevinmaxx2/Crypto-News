@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/crypto-data/', get_crypto_data, name='crypto-data'),
     path('api/crypto-list-data/', get_crypto_list_data, name='crypto-list-data'),
     path('portfolio/', portfolio_view, name='portfolio'),
+     path('add_to_portfolio/', views.add_to_portfolio, name='add_to_portfolio'),
     path('settings/', settings_view, name='settings'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('check_duplicate/', views.check_duplicate, name='check_duplicate'),

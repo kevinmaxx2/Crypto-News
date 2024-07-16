@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from .models import CustomUser
+from .models import CustomUser, Portfolio
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -69,4 +71,11 @@ class EmailAuthenticationForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
-    
+
+class PortfolioForm(forms.ModelForm):
+    class Meta:
+        model = Portfolio
+        fields = ['crypto_name', 'amount_owned', 'purchase_price']
+        widgets = {
+            'crypto_name': forms.Select(choices=[]),  # Choices will be populated in the view
+        }
