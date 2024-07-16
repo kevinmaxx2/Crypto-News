@@ -34,6 +34,7 @@ def fetch_and_transform_crypto_data():
         'sparkline': False,
         'price_change_percentage': '24h'  # Include 24-hour price change percentage
     }
+    
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()  # Raise exception for bad status codes
@@ -41,32 +42,29 @@ def fetch_and_transform_crypto_data():
 
         transformed_data = []
         for crypto in data:
-            # Ensure 'current_price' and 'price_change_percentage_24h' are present
             if 'current_price' in crypto:
                 price = _format_price(crypto['current_price'])
             else:
-                price = 'N/A'  # Handle case where price is missing
+                price = 'N/A'
 
             if 'price_change_percentage_24h' in crypto:
                 price_change_percentage_24h = crypto['price_change_percentage_24h']
             else:
-                price_change_percentage_24h = 'N/A'  # Handle case where percentage change is missing
+                price_change_percentage_24h = 'N/A'
 
             transformed_data.append({
                 'name': crypto.get('name', ''),
                 'symbol': crypto.get('symbol', '').upper(),
                 'price': price,
-                'price_change_percentage_24h': price_change_percentage_24h,  # Include 24-hour percentage change
-                'marketcap': _format_marketcap(crypto.get('market_cap', 0)),  # Replace with your market cap formatting function
+                'price_change_percentage_24h': price_change_percentage_24h,
+                'marketcap': _format_marketcap(crypto.get('market_cap', 0)),
                 'image': crypto.get('image', '')
-                # Add more fields as needed for list format
             })
 
         return transformed_data
 
     except requests.RequestException as e:
-        return {'error': f'Error fetching data: {str(e)}'}
-
+        return [{'error': f'Error fetching data: {str(e)}'}]
 def get_crypto_data(request):
     cache_key = 'crypto_data'
     cache_time = 300  # Cache data for 5 minutes (300 seconds)
@@ -126,7 +124,7 @@ def get_portfolio_data(request):
 
 def fetch_dropdown_data():
     transformed_data = fetch_and_transform_crypto_data()  # Fetch cryptocurrency data
-    dropdown_data = [{'symbol': crypto['symbol']} for crypto in transformed_data]
+    dropdown_data = [{'symbol': crypto.get('symbol', '')} for crypto in transformed_data]
     return dropdown_data
 
 def _calculate_current_value(crypto_name, crypto_data, amount_owned):
@@ -163,6 +161,11 @@ def add_to_portfolio(request):
             return redirect('portfolio')  # Redirect to the portfolio page
 
     return render(request, 'portfolio.html')
+@login_required
+def delete_portfolio(request, portfolio_id):
+    portfolio_entry = get_object_or_404(Portfolio, id=portfolio_id, user=request.user)
+    portfolio_entry.delete()
+    return redirect('portfolio')  
 def _format_price(price):
 
     # Convert price to float
@@ -258,6 +261,7 @@ def portfolio_view(request):
 
     for portfolio in portfolios:
         portfolio_data.append({
+            'id': portfolio.id,
             'crypto_name': portfolio.crypto_name,
             'amount_owned': portfolio.amount_owned,
             'purchase_price': portfolio.purchase_price,

@@ -2,52 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Portfolio</title>
     <style>
-        /* Add your CSS here */
+        /* Your existing styles */
+        
+        /* Add some styles for delete button */
+        .delete-button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .delete-button:hover {
+            background-color: #ff3333;
+        }
+        .portfolio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <h1>My Portfolio</h1>
-    
-    <!-- Form to add to portfolio -->
-    <form method="post" action="{% url 'add_to_portfolio' %}">
+    <h1>Your Portfolio</h1>
+
+    <div id="portfolio-list">
+        {% for entry in portfolios %}
+            <div class="portfolio-item">
+                <div>
+                    <p>Cryptocurrency: {{ entry.crypto_name }}</p>
+                    <p>Amount Owned: {{ entry.amount_owned }}</p>
+                    <p>Purchase Price: {{ entry.purchase_price }}</p>
+                    <p>Current Value: {{ entry.current_value }}</p>
+                    <p>Profit/Loss: {{ entry.profit_loss }}</p>
+                </div>
+                <div>
+                    <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Your form for adding new entries to the portfolio -->
+    <!-- Dropdown form to add new portfolio entries -->
+    <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
         {% csrf_token %}
-        <label for="crypto_symbol">Select Cryptocurrency:</label>
-        <select name="crypto_symbol" id="crypto_symbol">
+        <label for="crypto_symbol">Cryptocurrency Symbol:</label>
+        <select id="crypto_symbol" name="crypto_symbol">
             {% for crypto in dropdown_data %}
-                <option value="{{ crypto.symbol }}">{{ crypto.symbol }}</option>
+            <option value="{{ crypto.symbol|slice:":length|add:'-1'" }}">{{ crypto.symbol|slice:":length|add:'-1'" }} - {{ crypto.name }}</option>
             {% endfor %}
         </select>
         <label for="amount_owned">Amount Owned:</label>
-        <input type="text" name="amount_owned" id="amount_owned">
-        <label for="purchase_price">Purchase Price (USD):</label>
-        <input type="text" name="purchase_price" id="purchase_price">
+        <input type="text" id="amount_owned" name="amount_owned" required>
+        <label for="purchase_price">Purchase Price:</label>
+        <input type="text" id="purchase_price" name="purchase_price" required>
         <button type="submit">Add to Portfolio</button>
     </form>
-
-    <h2>Current Portfolio</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Cryptocurrency</th>
-                <th>Amount Owned</th>
-                <th>Purchase Price (USD)</th>
-                <th>Current Value (USD)</th>
-                <th>Profit/Loss (USD)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for portfolio in portfolios %}
-                <tr>
-                    <td>{{ portfolio.crypto_name }}</td>
-                    <td>{{ portfolio.amount_owned }}</td>
-                    <td>{{ portfolio.purchase_price }}</td>
-                    <td>{{ portfolio.current_value }}</td>
-                    <td>{{ portfolio.profit_loss }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 </body>
 </html>
