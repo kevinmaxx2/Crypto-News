@@ -161,11 +161,18 @@ def add_to_portfolio(request):
             return redirect('portfolio')  # Redirect to the portfolio page
 
     return render(request, 'portfolio.html')
+
 @login_required
 def delete_portfolio(request, portfolio_id):
     portfolio_entry = get_object_or_404(Portfolio, id=portfolio_id, user=request.user)
     portfolio_entry.delete()
-    return redirect('portfolio')  
+    
+    # Fetch and store the updated dropdown data in the session
+    dropdown_data = fetch_dropdown_data()  # Ensure this function returns the correct data
+    request.session['dropdown_data'] = dropdown_data
+    
+    return redirect('portfolio')
+
 def _format_price(price):
 
     # Convert price to float
@@ -256,7 +263,6 @@ def portfolio_view(request):
     portfolios = Portfolio.objects.filter(user=request.user)
     portfolio_data = []
 
-    
     crypto_data = fetch_and_transform_crypto_data()
 
     for portfolio in portfolios:
@@ -269,7 +275,8 @@ def portfolio_view(request):
             'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
         })
 
-    dropdown_data = fetch_dropdown_data()  # Ensure this function returns the correct data
+    # Check for dropdown data in the session
+    dropdown_data = request.session.get('dropdown_data', fetch_dropdown_data())
     context = {
         'portfolios': portfolio_data,
         'dropdown_data': dropdown_data

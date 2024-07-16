@@ -4,9 +4,37 @@
     <meta charset="UTF-8">
     <title>Portfolio</title>
     <style>
-        /* Your existing styles */
-        
-        /* Add some styles for delete button */
+        body {
+            background-color: #2c3e50;
+            color: #2c3e50;
+            font-family: 'Roboto', Arial, sans-serif; 
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #6c3483; /* Amethyst */
+            font-family: 'Roboto', Arial, sans-serif; 
+        }
+        .portfolio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ecf0f1; /* Light Silver */
+            color: #17253d; /* Midnight Blue */
+        }
         .delete-button {
             background-color: #ff4d4d;
             color: white;
@@ -18,14 +46,181 @@
         .delete-button:hover {
             background-color: #ff3333;
         }
-        .portfolio-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+        .auth-links {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+        .auth-links button, .auth-links a {
+            background-color: #ffffff;
+            color: #17253d; /* Midnight Blue */
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        .modal-header {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #6c3483; 
+            font-family: 'Reboto', Arial, sans-serif; 
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal input[type="email"],
+        .modal input[type="password"] {
+            width: 100%;
             padding: 10px;
+            margin: 10px 0 20px 0;
+            display: inline-block;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .modal button {
+            background-color: #17253d; /* Midnight Blue */
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .modal button:hover {
+            background-color: #111;
+        }
+        .g-signup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #db4437;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .g-signup img {
+            margin-right: 10px;
+        }
+        .modal-header {
+            color: #6c3483; /* Amethyst */
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .modal input[type="text"],
+        .modal input[type="email"],
+        .modal input[type="password"],
+        .modal input[type="tel"],
+        .modal input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+    
+        .modal input[type="text"]:focus,
+        .modal input[type="email"]:focus,
+        .modal input[type="password"]:focus,
+        .modal input[type="tel"]:focus,
+        .modal input[type="number"]:focus {
+            border-color: #17253d; /* Midnight Blue */
+            outline: none;
+            background-color: #ffffff;
+            box-shadow: 0 0 5px rgba(23, 37, 61, 0.5);
+        }
+        .dropdown-content form button {
+            background: none;
+            border: none;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 12px 16px;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+        .dropdown-content form button:hover {
+            background-color: #f1f1f1; /* Light grey background on hover */
+        }
+        label {
+            color: #ffffff; 
+            font-size: 1.3rem;
         }
     </style>
 </head>
@@ -56,7 +251,7 @@
     <!-- Dropdown form to add new portfolio entries -->
     <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
         {% csrf_token %}
-        <label for="crypto_symbol">Cryptocurrency Symbol:</label>
+        <label for="crypto_symbol">Cryptocurrency:</label>
         <select id="crypto_symbol" name="crypto_symbol">
             {% for crypto in dropdown_data %}
             <option value="{{ crypto.symbol|slice:":length|add:'-1'" }}">{{ crypto.symbol|slice:":length|add:'-1'" }} - {{ crypto.name }}</option>
@@ -68,5 +263,17 @@
         <input type="text" id="purchase_price" name="purchase_price" required>
         <button type="submit">Add to Portfolio</button>
     </form>
+    <div class="auth-links">
+        <div class="dropdown">
+            <button class="dropbtn">My Account</button>
+            <div class="dropdown-content">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'settings' %}">Settings</a>
+                <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
+                <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
 </body>
 </html>
