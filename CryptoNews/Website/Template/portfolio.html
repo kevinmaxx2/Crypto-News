@@ -18,12 +18,16 @@
             padding: 20px;
         }
         h1 {
-            text-align: center;
+            color: #ffffff;
             font-size: 2.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            display: inline-block;
             margin-bottom: 20px;
-            color: #6c3483; /* Amethyst */
-            font-family: 'Roboto', Arial, sans-serif; 
-        }
+}
         .portfolio-item {
             display: flex;
             justify-content: space-between;
@@ -84,7 +88,7 @@
             display: block;
         }
         .dropdown:hover .dropbtn {
-            background-color: #3e8e41;
+            background-color: #6c3483;
         }
         .auth-links button, .auth-links a {
             background-color: #ffffff;
@@ -159,23 +163,8 @@
         .modal button:hover {
             background-color: #111;
         }
-        .g-signup {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #db4437;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .g-signup img {
-            margin-right: 10px;
-        }
         .modal-header {
-            color: #6c3483; /* Amethyst */
+            color: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
             font-family: 'Roboto', Arial, sans-serif;
         }
         .modal input[type="text"],
@@ -219,9 +208,46 @@
             background-color: #f1f1f1; /* Light grey background on hover */
         }
         label {
-            color: #ffffff; 
+            color: #ffffff;
             font-size: 1.3rem;
+            text-align: center;
+            background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: block;
+            margin-bottom: 10px;
         }
+        input[type="text"], select {
+    color: #000000;
+    font-size: 1.2rem;
+    text-align: center;
+    background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    display: block;
+    margin-bottom: 20px;
+    width: 100%; /* Ensures full width */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+button[type="submit"] {
+    color: #ffffff;
+    font-size: 1.3rem;
+    background: linear-gradient(90deg, #8e44ad 0%, #00aced 100%);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-top: 20px;
+    width: 100%; /* Ensures full width */
+    text-align: center;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
+}
     </style>
 </head>
 <body>
