@@ -23,8 +23,12 @@ from .forms import PortfolioForm
 def home_view(request):
     return render(request, 'home.html')
 
-cache = caches['default']
 def fetch_and_transform_crypto_data():
+    cached_data = cache.get('crypto_data')
+    if cached_data:
+        logger.debug('Returning cached data')
+        return cached_data
+
     url = 'https://api.coingecko.com/api/v3/coins/markets'
     params = {
         'vs_currency': 'usd',
@@ -32,12 +36,12 @@ def fetch_and_transform_crypto_data():
         'per_page': 30,
         'page': 1,
         'sparkline': False,
-        'price_change_percentage': '24h'  # Include 24-hour price change percentage
+        'price_change_percentage': '24h'
     }
-    
+
     try:
         response = requests.get(url, params=params)
-        response.raise_for_status()  # Raise exception for bad status codes
+        response.raise_for_status()
         data = response.json()
 
         transformed_data = []
@@ -61,10 +65,14 @@ def fetch_and_transform_crypto_data():
                 'image': crypto.get('image', '')
             })
 
+        cache.set('crypto_data', transformed_data, timeout=3600)  # Cache for 1 hour
+        logger.debug('Fetched and cached new data')
         return transformed_data
 
     except requests.RequestException as e:
+        logger.error(f'Error fetching data: {str(e)}')
         return [{'error': f'Error fetching data: {str(e)}'}]
+    
 def get_crypto_data(request):
     cache_key = 'crypto_data'
     cache_time = 300  # Cache data for 5 minutes (300 seconds)
@@ -91,6 +99,8 @@ def get_crypto_list_data(request):
 
     return JsonResponse(data, safe=False)
 
+logger = logging.getLogger('CryptoNews')
+
 @login_required
 def get_portfolio_data(request):
     cache_key = 'crypto_data'
@@ -99,24 +109,33 @@ def get_portfolio_data(request):
 
     if not data:
         transformed_data = fetch_and_transform_crypto_data()
-        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
+        if not isinstance(transformed_data, dict) and 'error' not in transformed_data:  # Check if it's not an error dictionary
             cache.set(cache_key, transformed_data, cache_time)
         data = transformed_data
 
+    # Debugging: Log data retrieved
+    logger.debug(f"Fetched crypto data: {data}")
+
     portfolios = Portfolio.objects.filter(user=request.user)
     portfolio_data = []
+
     for portfolio in portfolios:
-        portfolio_data.append({
-            'crypto_name': portfolio.crypto_name,
-            'amount_owned': portfolio.amount_owned,
-            'purchase_price': portfolio.purchase_price,
-            'current_value': _calculate_current_value(portfolio.crypto_name, data),  # Function to calculate current value
-            'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, data)  # Function to calculate profit/loss
-        })
-    
+        try:
+            current_value = _calculate_current_value(portfolio.crypto_name, data, portfolio.amount_owned)
+            profit_loss = _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, data, portfolio.amount_owned)
+            portfolio_data.append({
+                'crypto_name': portfolio.crypto_name,
+                'amount_owned': portfolio.amount_owned,
+                'purchase_price': portfolio.purchase_price,
+                'current_value': current_value,
+                'profit_loss': profit_loss
+            })
+        except Exception as e:
+            logger.error(f"Error calculating portfolio data for {portfolio.crypto_name}: {str(e)}")
+
     # Ensure data is a dictionary before adding 'portfolio' key
     if not isinstance(data, dict):
-        data = {'data': data}  # Or handle appropriately if data is a list or another type
+        data = {'data': data}  # Handle appropriately if data is a list or another type
     
     data['portfolio'] = portfolio_data
 
@@ -124,7 +143,13 @@ def get_portfolio_data(request):
 
 def fetch_dropdown_data():
     transformed_data = fetch_and_transform_crypto_data()  # Fetch cryptocurrency data
-    dropdown_data = [{'symbol': crypto.get('symbol', '')} for crypto in transformed_data]
+    if isinstance(transformed_data, list):
+        dropdown_data = [{'symbol': crypto.get('symbol', ''), 'name': crypto.get('name', '')} for crypto in transformed_data]
+        logger.debug(f"Dropdown Data: {dropdown_data}")
+    else:
+        logger.error(f"Unexpected data format in transformed_data: {transformed_data}")
+        dropdown_data = []
+
     return dropdown_data
 
 def _calculate_current_value(crypto_name, crypto_data, amount_owned):
@@ -160,7 +185,11 @@ def add_to_portfolio(request):
             )
             return redirect('portfolio')  # Redirect to the portfolio page
 
-    return render(request, 'portfolio.html')
+    # Fetch dropdown data
+    dropdown_data = fetch_dropdown_data()
+    logger.debug(f"Dropdown Data passed to template: {dropdown_data}")
+
+    return render(request, 'portfolio.html', {'dropdown_data': dropdown_data})
 
 @login_required
 def delete_portfolio(request, portfolio_id):
@@ -311,7 +340,7 @@ def settings_view(request):
 class CustomLogoutView(LogoutView):
     next_page = '/'
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('CryptoNews')
 
 @csrf_protect
 def ajax_login_view(request):

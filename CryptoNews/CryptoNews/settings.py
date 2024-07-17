@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-
+import logging.config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -115,7 +115,54 @@ DATABASES = {
     }
 }
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # This ensures that Django's default logging configuration is not disabled
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',  # Change this to 'ERROR' or 'WARNING' to reduce verbosity
+        },
+        'django.request': {
+            'handlers': ['console', 'file'],
+            'level': 'ERROR',  # Only log errors
+            'propagate': False,
+        },
+        'CryptoNews': {  # Replace 'myapp' with the actual name of your app
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+        },
+    },
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

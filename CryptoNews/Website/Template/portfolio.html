@@ -284,13 +284,15 @@
         <label for="crypto_symbol">Cryptocurrency:</label>
         <select id="crypto_symbol" name="crypto_symbol">
             {% for crypto in dropdown_data %}
-            <option value="{{ crypto.symbol|slice:":length|add:'-1'" }}">{{ crypto.symbol|slice:":length|add:'-1'" }} - {{ crypto.name }}</option>
+            <option value="{{ crypto.symbol }}">{{ crypto.name }}</option>
             {% endfor %}
         </select>
         <label for="amount_owned">Amount Owned:</label>
-        <input type="text" id="amount_owned" name="amount_owned" required>
+        <input type="number" id="amount_owned" name="amount_owned" required>
+    
         <label for="purchase_price">Purchase Price:</label>
-        <input type="text" id="purchase_price" name="purchase_price" required>
+        <input type="number" id="purchase_price" name="purchase_price" required>
+        
         <button type="submit">Add to Portfolio</button>
     </form>
     <div class="auth-links">
@@ -305,5 +307,6 @@
                 </form>
             </div>
         </div>
+    </div>
 </body>
 </html>
