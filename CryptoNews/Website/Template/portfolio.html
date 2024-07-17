@@ -38,9 +38,16 @@
             border-radius: 5px;
             background-color: #ecf0f1; /* Light Silver */
             color: #17253d; /* Midnight Blue */
+            box-sizing: border-box;
         }
-        .delete-button {
-            background-color: #ff4d4d;
+        .portfolio-container {
+            width: 20%; 
+            margin: 0; 
+            padding: 0; 
+            position: relative;
+            }
+         form .delete-button {
+            background-color: red !important;
             color: white;
             border: none;
             padding: 5px 10px;
@@ -48,7 +55,7 @@
             border-radius: 5px;
         }
         .delete-button:hover {
-            background-color: #ff3333;
+            background-color: darkred !important;
         }
         .auth-links {
             position: absolute;
@@ -219,7 +226,7 @@
             box-sizing: border-box; /* Include padding and border in width */
 }
 
-        input[type="text"], select {
+        input[type="text"], select, input[type="number"] {
             color: #000000;
             font-size: 1.2rem;
             text-align: center;
@@ -245,19 +252,24 @@
             margin-top: 20px;
             margin-left: auto; /* Center the button */
             margin-right: auto; /* Center the button */
-            width: 50%; /* Adjusted to 50% */
             text-align: center;
         }
         button[type="submit"]:hover {
             background: linear-gradient(90deg, #00aced 0%, #8e44ad 100%);
         }
-    </style>
+        .positive {
+            color: green; 
+        }
+
+        .negative {
+            color: red; 
+        }
     </style>
 </head>
 <body>
     <h1>Your Portfolio</h1>
 
-    <div id="portfolio-list">
+    <div id="portfolio-list" class="portfolio-container">
         {% for entry in portfolios %}
             <div class="portfolio-item">
                 <div>
@@ -265,7 +277,9 @@
                     <p>Amount Owned: {{ entry.amount_owned }}</p>
                     <p>Purchase Price: {{ entry.purchase_price }}</p>
                     <p>Current Value: {{ entry.current_value }}</p>
-                    <p>Profit/Loss: {{ entry.profit_loss }}</p>
+                    <p class="{% if entry.profit_loss > 0 %}positive{% elif entry.profit_loss < 0 %}negative{% endif %}">
+                        Profit/Loss: {{ entry.profit_loss }}
+                    </p>
                 </div>
                 <div>
                     <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
@@ -281,6 +295,7 @@
     <!-- Dropdown form to add new portfolio entries -->
     <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
         {% csrf_token %}
+        <p>Dropdown Data: {{ dropdown_data }}</p>
         <label for="crypto_symbol">Cryptocurrency:</label>
         <select id="crypto_symbol" name="crypto_symbol">
             {% for crypto in dropdown_data %}
@@ -288,10 +303,10 @@
             {% endfor %}
         </select>
         <label for="amount_owned">Amount Owned:</label>
-        <input type="number" id="amount_owned" name="amount_owned" required>
+        <input type="number" id="amount_owned" name="amount_owned" step="0.01" required>
     
         <label for="purchase_price">Purchase Price:</label>
-        <input type="number" id="purchase_price" name="purchase_price" required>
+        <input type="number" id="purchase_price" name="purchase_price" step="0.01" required>
         
         <button type="submit">Add to Portfolio</button>
     </form>

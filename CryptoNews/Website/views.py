@@ -304,8 +304,7 @@ def portfolio_view(request):
             'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
         })
 
-    # Check for dropdown data in the session
-    dropdown_data = request.session.get('dropdown_data', fetch_dropdown_data())
+    dropdown_data = fetch_dropdown_data()  # Ensure fetch_dropdown_data() is called here
     context = {
         'portfolios': portfolio_data,
         'dropdown_data': dropdown_data
