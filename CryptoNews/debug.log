@@ -6993,3 +6993,771 @@ DEBUG 2024-07-18 08:41:10,132 views Returning cached data
 DEBUG 2024-07-18 08:41:10,133 views Returning cached data
 DEBUG 2024-07-18 08:41:10,133 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
 INFO 2024-07-18 08:41:10,158 basehttp "GET /portfolio/ HTTP/1.1" 200 15187
+INFO 2024-07-18 16:37:39,900 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:37:47,630 basehttp "GET / HTTP/1.1" 200 29971
+INFO 2024-07-18 16:37:48,127 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 4
+INFO 2024-07-18 16:37:48,131 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 4
+ERROR 2024-07-18 16:37:54,417 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 313, in portfolio_view
+    summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 351, in calculate_portfolio_summary
+    total_value = sum(item['current_value'] for item in portfolio_data)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'
+ERROR 2024-07-18 16:37:54,422 basehttp "GET /portfolio/ HTTP/1.1" 500 83465
+INFO 2024-07-18 16:38:00,072 basehttp "GET / HTTP/1.1" 200 29971
+INFO 2024-07-18 16:38:00,196 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 4
+INFO 2024-07-18 16:38:00,196 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 4
+ERROR 2024-07-18 16:38:14,449 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 313, in portfolio_view
+    summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 351, in calculate_portfolio_summary
+    total_value = sum(item['current_value'] for item in portfolio_data)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'
+ERROR 2024-07-18 16:38:14,454 basehttp "GET /portfolio/ HTTP/1.1" 500 83465
+INFO 2024-07-18 16:39:05,532 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:39:07,363 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:39:18,414 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:39:20,223 autoreload Watching for file changes with StatReloader
+ERROR 2024-07-18 16:39:21,563 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 313, in portfolio_view
+    summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 352, in calculate_portfolio_summary
+    summary = [{
+              ^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 355, in <listcomp>
+    'current_price': next((crypto['price'] for crypto in crypto_data if crypto['name'] == item['crypto_name']), 0),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not iterable
+ERROR 2024-07-18 16:39:21,568 basehttp "GET /portfolio/ HTTP/1.1" 500 88341
+INFO 2024-07-18 16:40:18,235 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:40:20,001 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:40:28,593 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:40:30,412 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:41:41,483 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:41:43,258 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 16:41:46,356 views Fetched and cached new data
+INFO 2024-07-18 16:41:50,358 basehttp "GET / HTTP/1.1" 200 29971
+INFO 2024-07-18 16:41:50,634 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6434
+INFO 2024-07-18 16:41:50,636 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6434
+DEBUG 2024-07-18 16:41:52,462 views Returning cached data
+INFO 2024-07-18 16:41:57,896 basehttp - Broken pipe from ('127.0.0.1', 58952)
+INFO 2024-07-18 16:41:57,898 basehttp "GET /portfolio/ HTTP/1.1" 200 7292087
+INFO 2024-07-18 16:42:19,537 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:42:21,406 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:44:03,580 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:44:05,271 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:45:31,919 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:45:33,737 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:45:40,024 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:45:41,782 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:46:48,124 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:46:49,929 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:47:13,031 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:47:14,928 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:47:30,741 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:47:32,558 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 16:47:52,928 views Fetched and cached new data
+DEBUG 2024-07-18 16:47:52,930 views Returning cached data
+DEBUG 2024-07-18 16:47:52,930 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+ERROR 2024-07-18 16:47:53,086 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 309, in portfolio_view
+    pie_chart = create_pie_chart(summary)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 354, in create_pie_chart
+    fig = px.pie(summary, values='percentage', names='crypto', title='Portfolio Composition')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\plotly\express\_chart_types.py", line 1482, in pie
+    return make_figure(
+           ^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\plotly\express\_core.py", line 2090, in make_figure
+    args = build_dataframe(args, constructor)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\plotly\express\_core.py", line 1348, in build_dataframe
+    args["data_frame"] = pd.DataFrame(args["data_frame"])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pandas\core\frame.py", line 778, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy, typ=manager)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pandas\core\internals\construction.py", line 503, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, typ=typ, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pandas\core\internals\construction.py", line 114, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\pandas\core\internals\construction.py", line 667, in _extract_index
+    raise ValueError("If using all scalar values, you must pass an index")
+ValueError: If using all scalar values, you must pass an index
+ERROR 2024-07-18 16:47:53,099 basehttp "GET /portfolio/ HTTP/1.1" 500 130730
+INFO 2024-07-18 16:49:22,887 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:49:24,641 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:49:35,748 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:49:37,524 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:49:47,406 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:49:49,234 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 16:49:52,505 views Fetched and cached new data
+DEBUG 2024-07-18 16:49:52,507 views Returning cached data
+DEBUG 2024-07-18 16:49:52,507 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+ERROR 2024-07-18 16:49:52,572 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 310, in portfolio_view
+    # Generate charts
+                ^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 359, in create_pie_chart
+    # Create a DataFrame from the summary data
+         ^^
+NameError: name 'pd' is not defined
+ERROR 2024-07-18 16:49:52,578 basehttp "GET /portfolio/ HTTP/1.1" 500 91378
+DEBUG 2024-07-18 16:49:57,727 views Returning cached data
+DEBUG 2024-07-18 16:49:57,728 views Returning cached data
+DEBUG 2024-07-18 16:49:57,729 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+ERROR 2024-07-18 16:49:57,762 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 310, in portfolio_view
+    # Generate charts
+                ^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 359, in create_pie_chart
+    # Create a DataFrame from the summary data
+         ^^
+NameError: name 'pd' is not defined
+ERROR 2024-07-18 16:49:57,766 basehttp "GET /portfolio/ HTTP/1.1" 500 91378
+INFO 2024-07-18 16:50:38,105 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:50:42,043 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 16:50:42,504 views Fetched and cached new data
+DEBUG 2024-07-18 16:50:42,505 views Fetched and cached new data
+INFO 2024-07-18 16:50:42,510 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6434
+INFO 2024-07-18 16:50:42,510 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6434
+DEBUG 2024-07-18 16:50:44,330 views Returning cached data
+DEBUG 2024-07-18 16:50:44,331 views Returning cached data
+DEBUG 2024-07-18 16:50:44,331 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+ERROR 2024-07-18 16:50:45,228 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 314, in portfolio_view
+    pie_chart_div = pie_chart.to_html(full_html=False)
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'Figure' object has no attribute 'to_html'
+ERROR 2024-07-18 16:50:45,232 basehttp "GET /portfolio/ HTTP/1.1" 500 88299
+INFO 2024-07-18 16:51:32,349 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:51:35,279 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:51:50,524 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:51:52,366 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:51:59,295 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:52:01,162 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:52:05,665 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:52:07,539 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:52:12,106 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:52:13,914 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:52:23,243 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:52:25,025 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:52:31,861 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:52:33,702 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:53:31,485 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:53:33,334 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:53:49,857 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:53:51,736 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:54:01,110 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:54:02,899 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 16:54:17,037 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 16:54:18,903 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 16:54:24,413 views Fetched and cached new data
+DEBUG 2024-07-18 16:54:24,414 views Returning cached data
+DEBUG 2024-07-18 16:54:24,415 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 16:54:24,794 basehttp "GET /portfolio/ HTTP/1.1" 200 13550
+DEBUG 2024-07-18 16:54:29,649 views Returning cached data
+DEBUG 2024-07-18 16:54:29,650 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 16:54:29,660 basehttp "POST /delete_portfolio/26/ HTTP/1.1" 302 0
+DEBUG 2024-07-18 16:54:29,671 views Returning cached data
+DEBUG 2024-07-18 16:54:29,672 views Returning cached data
+DEBUG 2024-07-18 16:54:29,673 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 16:54:29,676 basehttp "GET /portfolio/ HTTP/1.1" 200 12725
+INFO 2024-07-18 16:54:33,094 basehttp "POST /add_to_portfolio/ HTTP/1.1" 302 0
+DEBUG 2024-07-18 16:54:33,103 views Returning cached data
+DEBUG 2024-07-18 16:54:33,104 views Returning cached data
+DEBUG 2024-07-18 16:54:33,104 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 16:54:33,313 basehttp "GET /portfolio/ HTTP/1.1" 200 13550
+DEBUG 2024-07-18 19:17:46,056 views Fetched and cached new data
+DEBUG 2024-07-18 19:17:46,058 views Returning cached data
+DEBUG 2024-07-18 19:17:46,058 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 19:17:46,284 basehttp "GET /portfolio/ HTTP/1.1" 200 13550
+DEBUG 2024-07-18 19:22:17,338 views Returning cached data
+DEBUG 2024-07-18 19:22:17,339 views Returning cached data
+DEBUG 2024-07-18 19:22:17,339 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 19:22:27,616 basehttp "GET / HTTP/1.1" 200 29971
+INFO 2024-07-18 19:22:27,730 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6420
+INFO 2024-07-18 19:22:27,731 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6420
+DEBUG 2024-07-18 19:22:29,628 views Returning cached data
+DEBUG 2024-07-18 19:22:29,629 views Returning cached data
+DEBUG 2024-07-18 19:22:29,629 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 19:22:29,893 basehttp "GET /portfolio/ HTTP/1.1" 200 32891
+INFO 2024-07-18 19:24:51,244 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:24:53,977 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 19:24:54,438 views Fetched and cached new data
+INFO 2024-07-18 19:24:54,440 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6420
+DEBUG 2024-07-18 19:24:54,450 views Fetched and cached new data
+INFO 2024-07-18 19:24:54,453 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6420
+DEBUG 2024-07-18 19:24:55,709 views Returning cached data
+DEBUG 2024-07-18 19:24:55,710 views Returning cached data
+DEBUG 2024-07-18 19:24:55,710 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 19:24:56,103 basehttp "GET /portfolio/ HTTP/1.1" 200 32832
+INFO 2024-07-18 19:26:02,303 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:27:11,241 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:27:13,785 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 19:27:14,305 views Fetched and cached new data
+INFO 2024-07-18 19:27:14,307 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6420
+DEBUG 2024-07-18 19:27:14,330 views Fetched and cached new data
+INFO 2024-07-18 19:27:14,332 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6420
+DEBUG 2024-07-18 19:27:15,188 views Returning cached data
+DEBUG 2024-07-18 19:27:15,189 views Returning cached data
+DEBUG 2024-07-18 19:27:15,189 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'USDE', 'name': 'Ethena USDe'}]
+INFO 2024-07-18 19:27:15,309 basehttp "GET /portfolio/ HTTP/1.1" 200 32832
+INFO 2024-07-18 19:28:19,871 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\CryptoNews\settings.py changed, reloading.
+INFO 2024-07-18 19:28:21,681 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:28:43,030 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\CryptoNews\settings.py changed, reloading.
+INFO 2024-07-18 19:28:44,822 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 19:28:47,276 views Fetched and cached new data
+DEBUG 2024-07-18 19:28:47,278 views Returning cached data
+DEBUG 2024-07-18 19:28:47,278 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 19:28:47,396 basehttp "GET /portfolio/ HTTP/1.1" 200 32836
+INFO 2024-07-18 19:50:19,179 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:50:21,151 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:50:25,709 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:50:27,522 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:50:52,506 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:50:54,356 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:51:15,649 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:51:17,460 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:51:24,288 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:51:26,080 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:51:30,554 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:51:32,323 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:51:45,254 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:51:47,170 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:51:48,933 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:51:50,567 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:52:28,848 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:52:30,723 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:52:53,202 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:52:55,088 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 19:52:57,824 views Fetched and cached new data
+ERROR 2024-07-18 19:52:57,874 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 304, in portfolio_view
+    'crypto_id': portfolio.crypto_id  # Ensure this field exists
+                 ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Portfolio' object has no attribute 'crypto_id'
+ERROR 2024-07-18 19:52:57,878 basehttp "GET /portfolio/ HTTP/1.1" 500 84984
+INFO 2024-07-18 19:55:04,085 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:55:05,931 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:56:18,101 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:56:19,902 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:56:29,169 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:56:30,933 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:56:49,846 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:56:51,654 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:57:02,088 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:57:03,889 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:57:33,022 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 19:57:33,524 views Fetched and cached new data
+INFO 2024-07-18 19:57:33,526 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6437
+DEBUG 2024-07-18 19:57:33,574 views Fetched and cached new data
+INFO 2024-07-18 19:57:33,576 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6437
+DEBUG 2024-07-18 19:57:35,800 views Returning cached data
+DEBUG 2024-07-18 19:57:35,801 views Returning cached data
+DEBUG 2024-07-18 19:57:35,801 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 19:57:35,856 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 308, in portfolio_view
+    summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 335, in calculate_portfolio_summary
+    symbol = entry['crypto_name']
+             ~~~~~^^^^^^^^^^^^^^^
+KeyError: 'crypto_name'
+ERROR 2024-07-18 19:57:35,860 basehttp "GET /portfolio/ HTTP/1.1" 500 98400
+INFO 2024-07-18 19:58:31,425 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:58:33,254 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 19:58:43,099 views Fetched and cached new data
+DEBUG 2024-07-18 19:58:43,100 views Returning cached data
+DEBUG 2024-07-18 19:58:43,101 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 19:58:43,158 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 311, in portfolio_view
+    valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 354, in calculate_valuation_over_time
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['name'] == item['crypto_name']), {})
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 354, in <genexpr>
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['name'] == item['crypto_name']), {})
+                                                                                                         ~~~~^^^^^^^^^^^^^^^
+KeyError: 'crypto_name'
+ERROR 2024-07-18 19:58:43,164 basehttp "GET /portfolio/ HTTP/1.1" 500 104024
+DEBUG 2024-07-18 19:58:45,718 views Returning cached data
+DEBUG 2024-07-18 19:58:45,720 views Returning cached data
+DEBUG 2024-07-18 19:58:45,720 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 19:58:45,761 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 311, in portfolio_view
+    valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 354, in calculate_valuation_over_time
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['name'] == item['crypto_name']), {})
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 354, in <genexpr>
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['name'] == item['crypto_name']), {})
+                                                                                                         ~~~~^^^^^^^^^^^^^^^
+KeyError: 'crypto_name'
+ERROR 2024-07-18 19:58:45,766 basehttp "GET /portfolio/ HTTP/1.1" 500 104024
+INFO 2024-07-18 19:59:30,613 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:59:32,418 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:59:39,292 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:59:41,106 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 19:59:54,134 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 19:59:55,965 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:00:12,453 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:00:14,301 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:00:16,380 views Fetched and cached new data
+DEBUG 2024-07-18 20:00:16,382 views Returning cached data
+DEBUG 2024-07-18 20:00:16,382 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:00:16,446 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 311, in portfolio_view
+    valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 353, in calculate_valuation_over_time
+    crypto_prices = {crypto['symbol']: crypto['historical_prices'] for crypto in crypto_data}
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 353, in <dictcomp>
+    crypto_prices = {crypto['symbol']: crypto['historical_prices'] for crypto in crypto_data}
+                                       ~~~~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'historical_prices'
+ERROR 2024-07-18 20:00:16,453 basehttp "GET /portfolio/ HTTP/1.1" 500 102478
+INFO 2024-07-18 20:00:35,903 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:00:37,694 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:01:08,784 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:01:10,642 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:01:13,316 views Fetched and cached new data
+DEBUG 2024-07-18 20:01:13,318 views Returning cached data
+DEBUG 2024-07-18 20:01:13,318 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:01:13,372 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 311, in portfolio_view
+    valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 356, in calculate_valuation_over_time
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), {})
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 356, in <genexpr>
+    historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), {})
+                              ~~~~~~^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'historical_prices'
+ERROR 2024-07-18 20:01:13,376 basehttp "GET /portfolio/ HTTP/1.1" 500 103864
+INFO 2024-07-18 20:24:15,506 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:24:17,387 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:24:20,102 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 20:24:20,824 views Fetched and cached new data
+INFO 2024-07-18 20:24:20,826 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6439
+DEBUG 2024-07-18 20:24:20,857 views Fetched and cached new data
+INFO 2024-07-18 20:24:20,859 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6439
+DEBUG 2024-07-18 20:24:21,868 views Returning cached data
+DEBUG 2024-07-18 20:24:21,869 views Returning cached data
+DEBUG 2024-07-18 20:24:21,870 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:24:22,054 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 317, in portfolio_view
+    pie_chart_div = pie_chart.to_html(full_html=False) if pie_chart else ""
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'to_html'
+ERROR 2024-07-18 20:24:22,060 basehttp "GET /portfolio/ HTTP/1.1" 500 92557
+INFO 2024-07-18 20:25:08,951 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:25:10,853 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:25:13,413 views Fetched and cached new data
+DEBUG 2024-07-18 20:25:13,415 views Returning cached data
+DEBUG 2024-07-18 20:25:13,415 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:25:13,578 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 317, in portfolio_view
+    pie_chart_div = pie_chart.to_html(full_html=False) if pie_chart else ""
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'to_html'
+ERROR 2024-07-18 20:25:13,582 basehttp "GET /portfolio/ HTTP/1.1" 500 92543
+INFO 2024-07-18 20:27:53,844 basehttp "GET / HTTP/1.1" 200 29971
+INFO 2024-07-18 20:27:53,961 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6439
+INFO 2024-07-18 20:27:53,965 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6439
+DEBUG 2024-07-18 20:28:08,832 views Returning cached data
+DEBUG 2024-07-18 20:28:08,835 views Returning cached data
+DEBUG 2024-07-18 20:28:08,835 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:28:08,931 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 317, in portfolio_view
+    pie_chart_div = pie_chart.to_html(full_html=False) if pie_chart else ""
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'to_html'
+ERROR 2024-07-18 20:28:08,934 basehttp "GET /portfolio/ HTTP/1.1" 500 92557
+INFO 2024-07-18 20:29:15,787 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:29:17,605 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:29:31,420 views Fetched and cached new data
+ERROR 2024-07-18 20:29:31,468 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 299, in portfolio_view
+    'crypto_symbol': portfolio.crypto_symbol,  # Use crypto_symbol instead of crypto_id
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Portfolio' object has no attribute 'crypto_symbol'
+ERROR 2024-07-18 20:29:31,473 basehttp "GET /portfolio/ HTTP/1.1" 500 84969
+INFO 2024-07-18 20:30:39,400 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\models.py changed, reloading.
+INFO 2024-07-18 20:30:41,250 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:31:38,951 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:31:40,800 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:31:58,545 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:32:00,345 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:32:15,684 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:32:17,562 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:32:35,311 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:32:37,225 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:32:43,597 views Fetched and cached new data
+ERROR 2024-07-18 20:32:43,725 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: Website_portfolio.crypto_symbol
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 296, in portfolio_view
+    for portfolio in portfolios:
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: Website_portfolio.crypto_symbol
+ERROR 2024-07-18 20:32:43,737 basehttp "GET /portfolio/ HTTP/1.1" 500 150416
+INFO 2024-07-18 20:34:22,325 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:34:25,506 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 20:34:26,217 views Fetched and cached new data
+INFO 2024-07-18 20:34:26,220 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6438
+DEBUG 2024-07-18 20:34:26,229 views Fetched and cached new data
+INFO 2024-07-18 20:34:26,231 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6438
+DEBUG 2024-07-18 20:34:27,402 views Returning cached data
+ERROR 2024-07-18 20:34:27,451 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 300, in portfolio_view
+    'crypto_symbol': portfolio.crypto_symbol,  # Ensure this field is used
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Portfolio' object has no attribute 'crypto_symbol'
+ERROR 2024-07-18 20:34:27,455 basehttp "GET /portfolio/ HTTP/1.1" 500 84979
+INFO 2024-07-18 20:36:05,053 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\models.py changed, reloading.
+INFO 2024-07-18 20:36:06,933 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:36:10,591 views Fetched and cached new data
+ERROR 2024-07-18 20:36:10,670 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: Website_portfolio.crypto_symbol
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 296, in portfolio_view
+    for portfolio in portfolios:
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 400, in __iter__
+    self._fetch_all()
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\db\backends\sqlite3\base.py", line 329, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: Website_portfolio.crypto_symbol
+ERROR 2024-07-18 20:36:10,685 basehttp "GET /portfolio/ HTTP/1.1" 500 150416
+INFO 2024-07-18 20:36:44,752 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:36:47,769 basehttp "GET / HTTP/1.1" 200 29971
+DEBUG 2024-07-18 20:36:48,201 views Fetched and cached new data
+INFO 2024-07-18 20:36:48,203 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6438
+DEBUG 2024-07-18 20:36:48,326 views Fetched and cached new data
+INFO 2024-07-18 20:36:48,329 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6438
+DEBUG 2024-07-18 20:36:49,767 views Returning cached data
+DEBUG 2024-07-18 20:36:49,768 views Returning cached data
+DEBUG 2024-07-18 20:36:49,768 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+ERROR 2024-07-18 20:36:49,918 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 319, in portfolio_view
+    pie_chart_div = pie_chart.to_html(full_html=False) if pie_chart else ""
+                    ^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'to_html'
+ERROR 2024-07-18 20:36:49,922 basehttp "GET /portfolio/ HTTP/1.1" 500 92633
+INFO 2024-07-18 20:37:47,255 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:37:49,150 autoreload Watching for file changes with StatReloader
+INFO 2024-07-18 20:37:59,580 autoreload C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py changed, reloading.
+INFO 2024-07-18 20:38:01,443 autoreload Watching for file changes with StatReloader
+DEBUG 2024-07-18 20:38:03,388 views Fetched and cached new data
+DEBUG 2024-07-18 20:38:03,390 views Returning cached data
+DEBUG 2024-07-18 20:38:03,390 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 20:38:03,504 basehttp "GET /portfolio/ HTTP/1.1" 200 13649
+DEBUG 2024-07-18 20:38:11,714 views Returning cached data
+DEBUG 2024-07-18 20:38:11,714 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 20:38:11,722 basehttp "POST /delete_portfolio/27/ HTTP/1.1" 302 0
+DEBUG 2024-07-18 20:38:11,732 views Returning cached data
+DEBUG 2024-07-18 20:38:11,733 views Returning cached data
+DEBUG 2024-07-18 20:38:11,734 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 20:38:11,737 basehttp "GET /portfolio/ HTTP/1.1" 200 12790
+INFO 2024-07-18 20:38:14,981 basehttp "POST /add_to_portfolio/ HTTP/1.1" 302 0
+DEBUG 2024-07-18 20:38:14,990 views Returning cached data
+DEBUG 2024-07-18 20:38:14,991 views Returning cached data
+DEBUG 2024-07-18 20:38:14,992 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 20:38:15,044 basehttp "GET /portfolio/ HTTP/1.1" 200 13649
+DEBUG 2024-07-18 20:38:45,631 views Returning cached data
+DEBUG 2024-07-18 20:38:45,632 views Returning cached data
+DEBUG 2024-07-18 20:38:45,632 views Dropdown Data: [{'symbol': 'BTC', 'name': 'Bitcoin'}, {'symbol': 'ETH', 'name': 'Ethereum'}, {'symbol': 'USDT', 'name': 'Tether'}, {'symbol': 'BNB', 'name': 'BNB'}, {'symbol': 'SOL', 'name': 'Solana'}, {'symbol': 'USDC', 'name': 'USDC'}, {'symbol': 'STETH', 'name': 'Lido Staked Ether'}, {'symbol': 'XRP', 'name': 'XRP'}, {'symbol': 'TON', 'name': 'Toncoin'}, {'symbol': 'DOGE', 'name': 'Dogecoin'}, {'symbol': 'ADA', 'name': 'Cardano'}, {'symbol': 'TRX', 'name': 'TRON'}, {'symbol': 'AVAX', 'name': 'Avalanche'}, {'symbol': 'SHIB', 'name': 'Shiba Inu'}, {'symbol': 'WBTC', 'name': 'Wrapped Bitcoin'}, {'symbol': 'DOT', 'name': 'Polkadot'}, {'symbol': 'LINK', 'name': 'Chainlink'}, {'symbol': 'BCH', 'name': 'Bitcoin Cash'}, {'symbol': 'NEAR', 'name': 'NEAR Protocol'}, {'symbol': 'UNI', 'name': 'Uniswap'}, {'symbol': 'LEO', 'name': 'LEO Token'}, {'symbol': 'LTC', 'name': 'Litecoin'}, {'symbol': 'DAI', 'name': 'Dai'}, {'symbol': 'WEETH', 'name': 'Wrapped eETH'}, {'symbol': 'PEPE', 'name': 'Pepe'}, {'symbol': 'MATIC', 'name': 'Polygon'}, {'symbol': 'ICP', 'name': 'Internet Computer'}, {'symbol': 'KAS', 'name': 'Kaspa'}, {'symbol': 'FET', 'name': 'Artificial Superintelligence Alliance'}, {'symbol': 'ETC', 'name': 'Ethereum Classic'}]
+INFO 2024-07-18 20:38:45,683 basehttp "GET /portfolio/ HTTP/1.1" 200 13649

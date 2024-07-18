@@ -2,6 +2,11 @@ import requests  # Import requests module
 import time
 import json
 import logging
+import io
+import base64
+import matplotlib
+matplotlib.use('Agg')
+from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -19,6 +24,10 @@ from django.contrib.auth import get_user_model
 from Website.models import CustomUser
 from .models import Portfolio
 from .forms import PortfolioForm 
+import plotly.express as px
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import pandas as pd
 # Create your views here.
 def home_view(request):
     return render(request, 'home.html')
@@ -46,21 +55,11 @@ def fetch_and_transform_crypto_data():
 
         transformed_data = []
         for crypto in data:
-            if 'current_price' in crypto:
-                price = _format_price(crypto['current_price'])
-            else:
-                price = 'N/A'
-
-            if 'price_change_percentage_24h' in crypto:
-                price_change_percentage_24h = crypto['price_change_percentage_24h']
-            else:
-                price_change_percentage_24h = 'N/A'
-
             transformed_data.append({
                 'name': crypto.get('name', ''),
                 'symbol': crypto.get('symbol', '').upper(),
-                'price': price,
-                'price_change_percentage_24h': price_change_percentage_24h,
+                'price': _format_price(crypto.get('current_price', 0)),
+                'price_change_percentage_24h': crypto.get('price_change_percentage_24h', 'N/A'),
                 'marketcap': _format_marketcap(crypto.get('market_cap', 0)),
                 'image': crypto.get('image', '')
             })
@@ -71,7 +70,7 @@ def fetch_and_transform_crypto_data():
 
     except requests.RequestException as e:
         logger.error(f'Error fetching data: {str(e)}')
-        return [{'error': f'Error fetching data: {str(e)}'}]
+        return []  # Return an empty list in case of an error
     
 def get_crypto_data(request):
     cache_key = 'crypto_data'
@@ -180,8 +179,8 @@ def add_to_portfolio(request):
             Portfolio.objects.create(
                 user=request.user,
                 crypto_name=crypto_symbol,
-                amount_owned=amount_owned,
-                purchase_price=purchase_price
+                amount_owned=float(amount_owned),  # Convert to float for consistency
+                purchase_price=float(purchase_price)  # Convert to float for consistency
             )
             return redirect('portfolio')  # Redirect to the portfolio page
 
@@ -292,25 +291,123 @@ def portfolio_view(request):
     portfolios = Portfolio.objects.filter(user=request.user)
     portfolio_data = []
 
-    crypto_data = fetch_and_transform_crypto_data()
+    crypto_data = fetch_and_transform_crypto_data() or []
 
     for portfolio in portfolios:
         portfolio_data.append({
             'id': portfolio.id,
             'crypto_name': portfolio.crypto_name,
+            'crypto_symbol': portfolio.crypto_symbol,  # Ensure this field is used
             'amount_owned': portfolio.amount_owned,
             'purchase_price': portfolio.purchase_price,
-            'current_value': _calculate_current_value(portfolio.crypto_name, crypto_data, portfolio.amount_owned),
-            'profit_loss': _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
+            'current_value': _calculate_current_value(portfolio.crypto_symbol, crypto_data, portfolio.amount_owned),
+            'profit_loss': _calculate_profit_loss(portfolio.crypto_symbol, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
         })
 
-    dropdown_data = fetch_dropdown_data()  # Ensure fetch_dropdown_data() is called here
+    dropdown_data = fetch_dropdown_data() or []
+
+    # Calculate portfolio summary
+    summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+
+    # Calculate valuation over time
+    valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+
+    # Generate charts
+    pie_chart = create_pie_chart(summary)
+    valuation_chart = create_valuation_chart(valuation)
+
+    pie_chart_div = pie_chart if pie_chart else ""
+    valuation_chart_div = valuation_chart if valuation_chart else ""
     context = {
         'portfolios': portfolio_data,
-        'dropdown_data': dropdown_data
+        'dropdown_data': dropdown_data,
+        'pie_chart': pie_chart_div,
+        'valuation_chart': valuation_chart_div,
+        'total_value': total_value
     }
-    print(f"Portfolio Data: {portfolio_data}")
+
     return render(request, 'portfolio.html', context)
+
+def calculate_portfolio_summary(portfolio_data, crypto_data):
+    summary = {}
+    total_value = 0
+    
+    # Convert crypto_data to a dictionary for quick lookup
+    crypto_dict = {crypto['symbol']: float(crypto['price'].replace(',', '').replace('$', '')) for crypto in crypto_data}
+
+    for entry in portfolio_data:
+        symbol = entry.get('crypto_symbol')  # Use 'crypto_symbol' instead of 'crypto_name'
+        amount_owned = float(entry.get('amount_owned', 0))
+        
+        if symbol in crypto_dict:
+            current_price = crypto_dict[symbol]
+            value = current_price * amount_owned
+            summary[symbol] = value
+            total_value += value
+        else:
+            summary[symbol] = 0  # Handle cases where the symbol is not in the crypto data
+
+    return summary, total_value
+
+def calculate_valuation_over_time(portfolio_data, crypto_data):
+    valuation = {}
+    for item in portfolio_data:
+        # Use 'crypto_symbol' instead of 'crypto_name'
+        historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), {})
+        for date, price in historical_prices.items():
+            date = datetime.strptime(date, '%Y-%m-%d')
+            if date not in valuation:
+                valuation[date] = 0
+            valuation[date] += item['amount_owned'] * price
+    return sorted(valuation.items())
+
+def create_pie_chart(summary):
+    if not summary:
+        return None  # Return None if no data
+    
+    # Create a DataFrame from the summary data
+    df = pd.DataFrame(list(summary.items()), columns=['Cryptocurrency', 'Value'])
+    
+    # Plotting
+    fig, ax = plt.subplots()
+    ax.pie(df['Value'], labels=df['Cryptocurrency'], autopct='%1.1f%%')
+    ax.set_title('Portfolio Composition')
+    
+    # Save to a BytesIO object
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    plt.close(fig)
+    
+    # Encode image to base64
+    img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
+    return f"data:image/png;base64,{img_str}"
+
+
+
+def create_valuation_chart(valuation):
+    if not valuation:
+        return None  # Return None if no data
+    
+    # Example data structure: Convert valuation data to a DataFrame
+    df = pd.DataFrame(list(valuation.items()), columns=['Period', 'Value'])
+    
+    # Plotting
+    fig, ax = plt.subplots()
+    ax.bar(df['Period'], df['Value'])
+    ax.set_xlabel('Period')
+    ax.set_ylabel('Total Portfolio Value (USD)')
+    ax.set_title('Portfolio Value Over Time')
+    
+    # Save to a BytesIO object
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    plt.close(fig)
+    
+    # Encode image to base64
+    img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
+    return f"data:image/png;base64,{img_str}"
 
 @login_required
 def create_portfolio_view(request):
@@ -379,3 +476,54 @@ def check_duplicate(request):
 
     # Handle other HTTP methods if needed
     return JsonResponse({'error': 'POST request required'}, status=400)
+def get_crypto_id_from_symbol(symbol):
+    url = f'https://api.coingecko.com/api/v3/coins/markets'
+    params = {
+        'vs_currency': 'usd',
+        'ids': symbol.lower()  # Use lower case for the API
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    data = response.json()
+    if data:
+        return data[0]['id']
+    return None
+
+def fetch_historical_data(crypto_symbol, days_ago):
+    # Modify the URL to use 'crypto_symbol'
+    url = f'https://api.coingecko.com/api/v3/coins/{crypto_symbol}/market_chart'
+    params = {
+        'vs_currency': 'usd',
+        'days': days_ago,
+    }
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    data = response.json()
+    return data['prices'][-1][1]  # Return the price on the last date of the given period
+
+def fetch_portfolio_values(portfolio):
+    values = {}
+    for crypto in portfolio:
+        crypto_symbol = crypto['crypto_symbol']
+        values[crypto_symbol] = {
+            '7d': fetch_historical_data(crypto_symbol, '7'),
+            '1m': fetch_historical_data(crypto_symbol, '30'),
+            '6m': fetch_historical_data(crypto_symbol, '180'),
+            '1y': fetch_historical_data(crypto_symbol, '365'),
+            'current': fetch_historical_data(crypto_symbol, '1')  # Latest data
+        }
+    return values
+
+def calculate_portfolio_values(portfolio, historical_data):
+    values = {
+        '7d': 0,
+        '1m': 0,
+        '6m': 0,
+        '1y': 0
+    }
+    for crypto in portfolio:
+        symbol = crypto['crypto_symbol']
+        amount_owned = crypto['amount_owned']
+        for period in values.keys():
+            values[period] += historical_data[symbol][period] * amount_owned
+    return values

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Portfolio</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             background-color: #2c3e50;
@@ -264,6 +265,26 @@
         .negative {
             color: red; 
         }
+        .portfolio-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .portfolio-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            flex: 1 1 calc(33.333% - 20px); /* Adjust this to fit your design */
+            box-sizing: border-box;
+        }
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+        .chart-container {
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -290,18 +311,40 @@
             </div>
         {% endfor %}
     </div>
+    <!-- Pie Chart -->
+    <h2>Portfolio Composition</h2>
+    {% if pie_chart_url %}
+        <img src="{{ pie_chart_url }}" alt="Pie Chart">
+    {% else %}
+        <p>No data available for the pie chart.</p>
+    {% endif %}
+
+    <!-- Valuation Chart -->
+    <h2>Portfolio Valuation Over Time</h2>
+    {% if valuation_chart_url %}
+        <img src="{{ valuation_chart_url }}" alt="Valuation Chart">
+    {% else %}
+        <p>No data available for the valuation chart.</p>
+    {% endif %}
+
+    <!-- Other Portfolio Data -->
+    <h2>Portfolio Details</h2>
+    <ul>
+        {% for portfolio in portfolios %}
+            <li>{{ portfolio.crypto_name }}: {{ portfolio.current_value }} (Profit/Loss: {{ portfolio.profit_loss }})</li>
+        {% endfor %}
+    </ul>
 
     <!-- Your form for adding new entries to the portfolio -->
-    <!-- Dropdown form to add new portfolio entries -->
     <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
         {% csrf_token %}
-        <p>Dropdown Data: {{ dropdown_data }}</p>
         <label for="crypto_symbol">Cryptocurrency:</label>
         <select id="crypto_symbol" name="crypto_symbol">
             {% for crypto in dropdown_data %}
             <option value="{{ crypto.symbol }}">{{ crypto.name }}</option>
             {% endfor %}
         </select>
+
         <label for="amount_owned">Amount Owned:</label>
         <input type="number" id="amount_owned" name="amount_owned" step="0.01" required>
     
@@ -310,6 +353,7 @@
         
         <button type="submit">Add to Portfolio</button>
     </form>
+
     <div class="auth-links">
         <div class="dropdown">
             <button class="dropbtn">My Account</button>
