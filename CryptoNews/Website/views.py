@@ -6,6 +6,7 @@ import io
 import base64
 import matplotlib
 matplotlib.use('Agg')
+import re
 from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -28,11 +29,24 @@ import plotly.express as px
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import pandas as pd
-# Create your views here.
+from decimal import Decimal, InvalidOperation
+
+def sanitize_price(price_str):
+    if not isinstance(price_str, str):
+        price_str = str(price_str)  # Convert non-string inputs to string
+    # Remove commas and other non-numeric characters
+    cleaned_price = re.sub(r'[^\d.]', '', price_str)
+    try:
+        return Decimal(cleaned_price)
+    except (ValueError, InvalidOperation):
+        logger.error(f"Invalid price format: {price_str}")
+        return Decimal('0.00')
+    
 def home_view(request):
     return render(request, 'home.html')
 
 def fetch_and_transform_crypto_data():
+    logger.debug("Fetching and transforming crypto data")
     cached_data = cache.get('crypto_data')
     if cached_data:
         logger.debug('Returning cached data')
@@ -58,7 +72,7 @@ def fetch_and_transform_crypto_data():
             transformed_data.append({
                 'name': crypto.get('name', ''),
                 'symbol': crypto.get('symbol', '').upper(),
-                'price': _format_price(crypto.get('current_price', 0)),
+                'price': sanitize_price(crypto.get('current_price', '0')),
                 'price_change_percentage_24h': crypto.get('price_change_percentage_24h', 'N/A'),
                 'marketcap': _format_marketcap(crypto.get('market_cap', 0)),
                 'image': crypto.get('image', '')
@@ -66,11 +80,12 @@ def fetch_and_transform_crypto_data():
 
         cache.set('crypto_data', transformed_data, timeout=3600)  # Cache for 1 hour
         logger.debug('Fetched and cached new data')
+        logger.debug(f'Transformed data: {transformed_data}')
         return transformed_data
 
     except requests.RequestException as e:
         logger.error(f'Error fetching data: {str(e)}')
-        return []  # Return an empty list in case of an error
+        return []
     
 def get_crypto_data(request):
     cache_key = 'crypto_data'
@@ -102,17 +117,17 @@ logger = logging.getLogger('CryptoNews')
 
 @login_required
 def get_portfolio_data(request):
+    logger.debug("Fetching portfolio data")
     cache_key = 'crypto_data'
     cache_time = 300  # Cache data for 5 minutes (300 seconds)
     data = cache.get(cache_key)
 
     if not data:
         transformed_data = fetch_and_transform_crypto_data()
-        if not isinstance(transformed_data, dict) and 'error' not in transformed_data:  # Check if it's not an error dictionary
+        if not isinstance(transformed_data, dict) and 'error' not in transformed_data:
             cache.set(cache_key, transformed_data, cache_time)
         data = transformed_data
 
-    # Debugging: Log data retrieved
     logger.debug(f"Fetched crypto data: {data}")
 
     portfolios = Portfolio.objects.filter(user=request.user)
@@ -120,8 +135,9 @@ def get_portfolio_data(request):
 
     for portfolio in portfolios:
         try:
-            current_value = _calculate_current_value(portfolio.crypto_name, data, portfolio.amount_owned)
-            profit_loss = _calculate_profit_loss(portfolio.crypto_name, portfolio.purchase_price, data, portfolio.amount_owned)
+            logger.debug(f"Calculating values for portfolio: {portfolio.crypto_name}")
+            current_value = _calculate_current_value(portfolio.crypto_symbol, data, portfolio.amount_owned)
+            profit_loss = _calculate_profit_loss(portfolio.crypto_symbol, portfolio.purchase_price, data, portfolio.amount_owned)
             portfolio_data.append({
                 'crypto_name': portfolio.crypto_name,
                 'amount_owned': portfolio.amount_owned,
@@ -129,19 +145,20 @@ def get_portfolio_data(request):
                 'current_value': current_value,
                 'profit_loss': profit_loss
             })
+            logger.debug(f"Calculated data for {portfolio.crypto_name}: Current Value: {current_value}, Profit/Loss: {profit_loss}")
         except Exception as e:
             logger.error(f"Error calculating portfolio data for {portfolio.crypto_name}: {str(e)}")
 
-    # Ensure data is a dictionary before adding 'portfolio' key
     if not isinstance(data, dict):
-        data = {'data': data}  # Handle appropriately if data is a list or another type
+        data = {'data': data}
     
     data['portfolio'] = portfolio_data
 
     return JsonResponse(data, safe=False)
 
+# Fetch Dropdown Data
 def fetch_dropdown_data():
-    transformed_data = fetch_and_transform_crypto_data()  # Fetch cryptocurrency data
+    transformed_data = fetch_and_transform_crypto_data()
     if isinstance(transformed_data, list):
         dropdown_data = [{'symbol': crypto.get('symbol', ''), 'name': crypto.get('name', '')} for crypto in transformed_data]
         logger.debug(f"Dropdown Data: {dropdown_data}")
@@ -151,22 +168,30 @@ def fetch_dropdown_data():
 
     return dropdown_data
 
-def _calculate_current_value(crypto_name, crypto_data, amount_owned):
+def _fetch_current_price(crypto_symbol, crypto_data):
     for crypto in crypto_data:
-        if crypto['symbol'].upper() == crypto_name.upper():
-            current_price = float(crypto['price'].replace(',', '').replace('$', ''))  # Extract and convert current price
-            amount_owned = float(amount_owned)
-            return round(amount_owned * current_price, 2)
-    return 0
+        if crypto['symbol'] == crypto_symbol:
+            price_str = crypto.get('price', '0')
+            price = sanitize_price(price_str)
+            return price
+    return Decimal('0.00')  # Default value if symbol is not found in the list
 
-def _calculate_profit_loss(crypto_name, purchase_price, crypto_data, amount_owned):
-    for crypto in crypto_data:
-        if crypto['symbol'].upper() == crypto_name.upper():
-            current_price = float(crypto['price'].replace(',', '').replace('$', ''))  # Extract and convert current price
-            amount_owned = float(amount_owned)
-            purchase_price = float(purchase_price)  # Convert purchase price to float
-            return round((current_price - purchase_price) * amount_owned, 2)
-    return 0
+def _calculate_current_value(crypto_symbol, crypto_data, amount_owned):
+    current_price = _fetch_current_price(crypto_symbol, crypto_data)
+    return round(amount_owned * current_price, 2)
+
+def _calculate_profit_loss(crypto_symbol, purchase_price, crypto_data, amount_owned):
+    current_price = _fetch_current_price(crypto_symbol, crypto_data)
+    try:
+        purchase_price = sanitize_price(purchase_price)
+    except Exception as e:
+        logger.error(f"Invalid purchase price format for {crypto_symbol}: {purchase_price}")
+        purchase_price = Decimal('0.00')  # Default value if conversion fails
+
+    profit_loss = (current_price - purchase_price) * amount_owned
+    return round(profit_loss, 2)
+
+
 @login_required
 def add_to_portfolio(request):
     if request.method == 'POST':
@@ -174,17 +199,22 @@ def add_to_portfolio(request):
         amount_owned = request.POST.get('amount_owned')
         purchase_price = request.POST.get('purchase_price')
 
-        # Validate and save the form data
-        if crypto_symbol and amount_owned and purchase_price:
+        # Fetch dropdown data
+        dropdown_data = fetch_dropdown_data()
+        valid_symbols = [crypto['symbol'] for crypto in dropdown_data]
+
+        if crypto_symbol in valid_symbols and amount_owned and purchase_price:
             Portfolio.objects.create(
                 user=request.user,
-                crypto_name=crypto_symbol,
-                amount_owned=float(amount_owned),  # Convert to float for consistency
-                purchase_price=float(purchase_price)  # Convert to float for consistency
+                crypto_symbol=crypto_symbol,
+                amount_owned=float(amount_owned),
+                purchase_price=float(purchase_price)
             )
             return redirect('portfolio')  # Redirect to the portfolio page
+        else:
+            logger.error(f"Invalid crypto_symbol: {crypto_symbol} or missing data")
+            # Handle invalid input (e.g., return an error message to the template)
 
-    # Fetch dropdown data
     dropdown_data = fetch_dropdown_data()
     logger.debug(f"Dropdown Data passed to template: {dropdown_data}")
 
@@ -196,26 +226,26 @@ def delete_portfolio(request, portfolio_id):
     portfolio_entry.delete()
     
     # Fetch and store the updated dropdown data in the session
-    dropdown_data = fetch_dropdown_data()  # Ensure this function returns the correct data
+    dropdown_data = fetch_dropdown_data()
     request.session['dropdown_data'] = dropdown_data
     
     return redirect('portfolio')
 
 def _format_price(price):
+    if not isinstance(price, (float, int, Decimal)):
+        logger.error(f"Invalid price type: {type(price)}")
+        return '0.00'
 
-    # Convert price to float
     price_float = float(price)
-    
-    # Round up if decimal part is >= 0.60
     if price_float % 1 >= 0.60:
         return f"{int(price_float) + 1:,}"
     else:
-        # Show two decimal places if price is lower than 100
         if price_float < 100:
             return f"{price_float:.2f}"
         else:
             return f"{int(price_float):,}"
 
+# Format Market Cap
 def _format_marketcap(market_cap):
     if market_cap >= 1_000_000_000:
         return f"{round(market_cap / 1_000_000_000)}B"
@@ -223,7 +253,6 @@ def _format_marketcap(market_cap):
         return f"{round(market_cap / 1_000_000)}M"
     else:
         return f"{market_cap}"
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -288,12 +317,15 @@ def register_view(request):
 
 @login_required
 def portfolio_view(request):
+    logger.debug("Starting portfolio_view function")
     portfolios = Portfolio.objects.filter(user=request.user)
     portfolio_data = []
 
     crypto_data = fetch_and_transform_crypto_data() or []
+    logger.debug(f"Fetched crypto data for portfolio view: {crypto_data}")
 
     for portfolio in portfolios:
+        logger.debug(f"Processing portfolio: {portfolio.crypto_name}")
         portfolio_data.append({
             'id': portfolio.id,
             'crypto_name': portfolio.crypto_name,
@@ -303,16 +335,16 @@ def portfolio_view(request):
             'current_value': _calculate_current_value(portfolio.crypto_symbol, crypto_data, portfolio.amount_owned),
             'profit_loss': _calculate_profit_loss(portfolio.crypto_symbol, portfolio.purchase_price, crypto_data, portfolio.amount_owned)
         })
-
+    logger.debug(f"Constructed portfolio data: {portfolio_data}")
     dropdown_data = fetch_dropdown_data() or []
+    logger.debug(f"Dropdown data: {dropdown_data}")
 
-    # Calculate portfolio summary
     summary, total_value = calculate_portfolio_summary(portfolio_data, crypto_data)
+    logger.debug(f"Portfolio summary: {summary}, Total value: {total_value}")
 
-    # Calculate valuation over time
     valuation = calculate_valuation_over_time(portfolio_data, crypto_data)
+    logger.debug(f"Valuation over time: {valuation}")
 
-    # Generate charts
     pie_chart = create_pie_chart(summary)
     valuation_chart = create_valuation_chart(valuation)
 
@@ -328,15 +360,15 @@ def portfolio_view(request):
 
     return render(request, 'portfolio.html', context)
 
+# Calculate Portfolio Summary
 def calculate_portfolio_summary(portfolio_data, crypto_data):
     summary = {}
     total_value = 0
-    
-    # Convert crypto_data to a dictionary for quick lookup
+
     crypto_dict = {crypto['symbol']: float(crypto['price'].replace(',', '').replace('$', '')) for crypto in crypto_data}
 
     for entry in portfolio_data:
-        symbol = entry.get('crypto_symbol')  # Use 'crypto_symbol' instead of 'crypto_name'
+        symbol = entry.get('crypto_symbol')
         amount_owned = float(entry.get('amount_owned', 0))
         
         if symbol in crypto_dict:
@@ -345,67 +377,102 @@ def calculate_portfolio_summary(portfolio_data, crypto_data):
             summary[symbol] = value
             total_value += value
         else:
-            summary[symbol] = 0  # Handle cases where the symbol is not in the crypto data
+            summary[symbol] = 0
 
     return summary, total_value
 
+
 def calculate_valuation_over_time(portfolio_data, crypto_data):
-    valuation = {}
+    valuation_over_time = []
+    
     for item in portfolio_data:
-        # Use 'crypto_symbol' instead of 'crypto_name'
-        historical_prices = next((crypto['historical_prices'] for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), {})
-        for date, price in historical_prices.items():
-            date = datetime.strptime(date, '%Y-%m-%d')
-            if date not in valuation:
-                valuation[date] = 0
-            valuation[date] += item['amount_owned'] * price
-    return sorted(valuation.items())
+        crypto_info = next((crypto for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), None)
+        
+        if crypto_info:
+            historical_prices = crypto_info.get('historical_prices', {})
+            
+            if not historical_prices:
+                logger.warning(f"No historical prices available for symbol {item['crypto_symbol']}")
+            
+            valuation = {
+                'symbol': item['crypto_symbol'],
+                'prices': historical_prices  # This is just an example
+            }
+            valuation_over_time.append(valuation)
+        else:
+            logger.warning(f"No data found for symbol {item['crypto_symbol']}")
+    
+    return valuation_over_time
 
 def create_pie_chart(summary):
-    if not summary:
-        return None  # Return None if no data
-    
-    # Create a DataFrame from the summary data
+    logger.debug(f"Creating pie chart with summary: {summary}")
+    if not summary or all(value == 0 for value in summary.values()):
+        logger.debug("No summary data or all values are zero for pie chart")
+        return None
+
     df = pd.DataFrame(list(summary.items()), columns=['Cryptocurrency', 'Value'])
-    
-    # Plotting
+    logger.debug(f"DataFrame for pie chart: {df}")
     fig, ax = plt.subplots()
     ax.pie(df['Value'], labels=df['Cryptocurrency'], autopct='%1.1f%%')
     ax.set_title('Portfolio Composition')
-    
-    # Save to a BytesIO object
+
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     buf.seek(0)
     plt.close(fig)
-    
-    # Encode image to base64
+
     img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
     return f"data:image/png;base64,{img_str}"
 
-
-
 def create_valuation_chart(valuation):
-    if not valuation:
-        return None  # Return None if no data
-    
-    # Example data structure: Convert valuation data to a DataFrame
-    df = pd.DataFrame(list(valuation.items()), columns=['Period', 'Value'])
-    
-    # Plotting
+    logger.debug(f"Creating valuation chart with data: {valuation}")
+
+    if not valuation or not isinstance(valuation, list):
+        logger.debug("Invalid valuation data provided for valuation chart")
+        return None
+
+    flattened_data = []
+    for item in valuation:
+        symbol = item.get('symbol')
+        prices = item.get('prices', {})
+
+        for date, value in prices.items():
+            try:
+                value = sanitize_price(value)  # Clean and convert price
+                if value is not None:
+                    flattened_data.append({'Date': date, 'Value': value})
+            except Exception as e:
+                logger.error(f"Error processing data for symbol {symbol}: {e}")
+
+    if not flattened_data:
+        logger.debug("No valid valuation data available for chart")
+        return None
+
+    df = pd.DataFrame(flattened_data)
+    if df.empty or df['Date'].isnull().all() or df['Value'].isnull().all():
+        logger.debug("No valid data available for DataFrame")
+        return None
+
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+    df = df.dropna(subset=['Date'])
+    df = df.sort_values('Date')
+
+    if df.empty:
+        logger.debug("DataFrame is empty after cleaning")
+        return None
+
     fig, ax = plt.subplots()
-    ax.bar(df['Period'], df['Value'])
-    ax.set_xlabel('Period')
-    ax.set_ylabel('Total Portfolio Value (USD)')
-    ax.set_title('Portfolio Value Over Time')
-    
-    # Save to a BytesIO object
+    ax.plot(df['Date'], df['Value'], marker='o')
+    ax.set_title('Portfolio Valuation Over Time')
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Value')
+    ax.grid(True)
+
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
     buf.seek(0)
     plt.close(fig)
-    
-    # Encode image to base64
+
     img_str = base64.b64encode(buf.getvalue()).decode('utf-8')
     return f"data:image/png;base64,{img_str}"
 
@@ -415,15 +482,27 @@ def create_portfolio_view(request):
         form = PortfolioForm(request.POST)
         if form.is_valid():
             portfolio = form.save(commit=False)
-            portfolio.user = request.user
-            portfolio.save()
-            return JsonResponse({'success': True, 'message': 'Portfolio entry added successfully'})
+            crypto_symbol = form.cleaned_data.get('crypto_symbol')
+
+            # Fetch dropdown data
+            dropdown_data = fetch_dropdown_data()
+            valid_symbols = [crypto['symbol'] for crypto in dropdown_data]
+
+            if crypto_symbol in valid_symbols:
+                portfolio.user = request.user
+                portfolio.save()
+                logger.debug(f"Portfolio entry added: {portfolio}")
+                return JsonResponse({'success': True, 'message': 'Portfolio entry added successfully'})
+            else:
+                logger.error(f"Invalid crypto_symbol: {crypto_symbol}")
+                return JsonResponse({'success': False, 'errors': {'crypto_symbol': 'Invalid cryptocurrency symbol'}}, status=400)
         else:
             errors = form.errors
+            logger.error(f"Form errors: {errors}")
             return JsonResponse({'success': False, 'errors': errors}, status=400)
     else:
         form = PortfolioForm()
-    
+
     context = {
         'form': form,
     }
@@ -490,16 +569,21 @@ def get_crypto_id_from_symbol(symbol):
     return None
 
 def fetch_historical_data(crypto_symbol, days_ago):
-    # Modify the URL to use 'crypto_symbol'
+    logger.debug(f"Fetching historical data for symbol: {crypto_symbol}, days ago: {days_ago}")
     url = f'https://api.coingecko.com/api/v3/coins/{crypto_symbol}/market_chart'
     params = {
         'vs_currency': 'usd',
         'days': days_ago,
     }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    data = response.json()
-    return data['prices'][-1][1]  # Return the price on the last date of the given period
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        logger.debug(f"Fetched data for {crypto_symbol}: {data}")
+        return data['prices'][-1][1]  # Return the price on the last date of the given period
+    except requests.RequestException as e:
+        logger.error(f"Error fetching historical data for {crypto_symbol}: {str(e)}")
+        return None
 
 def fetch_portfolio_values(portfolio):
     values = {}
