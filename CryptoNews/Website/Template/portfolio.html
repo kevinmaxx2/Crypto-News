@@ -285,6 +285,19 @@
         .chart-container {
             margin: 20px 0;
         }
+        .chart-container img {
+        border: 2px solid #000; /* Black border for visibility */
+        border-radius: 5px;     /* Optional: rounded corners for aesthetics */
+        padding: 5px;           /* Optional: space between border and image */
+        background-color: #fff; /* White background to contrast with background */
+    }
+
+    /* Style for chart sections */
+    .pie-chart img, .valuation-chart img {
+        border: 2px solid #333; /* Dark grey border for better visibility */
+        border-radius: 5px;
+        background-color: #f9f9f9; /* Light grey background for contrast */
+    }
     </style>
 </head>
 <body>
@@ -292,82 +305,86 @@
 
     {% if error %}
         <p>{{ error }}</p>
-    {% else %}
-        <div id="portfolio-list" class="portfolio-container">
-            {% for entry in portfolio_data %}
-                <div class="portfolio-item">
-                    <div>
-                        <p>Cryptocurrency: {{ entry.crypto_name }}</p>
-                        <p>Amount Owned: {{ entry.amount_owned }}</p>
-                        <p>Purchase Price: {{ entry.purchase_price }}</p>
-                        <p>Current Price: {{ entry.current_price }}</p>
-                        <p>Current Value: {{ entry.current_value }}</p>
-                        <p class="{% if entry.profit_loss > 0 %}positive{% elif entry.profit_loss < 0 %}negative{% endif %}">
-                            Profit/Loss: {{ entry.profit_loss }}
-                        </p>
-                    </div>
-                    <div>
-                        {% if entry.id %}
-                            <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="delete-button">Delete</button>
-                            </form>
-                        {% else %}
-                            <p>No ID available for this entry.</p>
-                        {% endif %}
-                    </div>
+    {% endif %}
+
+    <div id="portfolio-list" class="portfolio-container">
+        {% for entry in portfolio_data %}
+            <div class="portfolio-item">
+                <div>
+                    <p>Cryptocurrency: {{ entry.crypto_name }}</p>
+                    <p>Amount Owned: {{ entry.amount_owned }}</p>
+                    <p>Purchase Price: {{ entry.purchase_price }}</p>
+                    <p>Current Price: {{ entry.current_price }}</p>
+                    <p>Current Value: {{ entry.current_value }}</p>
+                    <p class="{% if entry.profit_loss > 0 %}positive{% elif entry.profit_loss < 0 %}negative{% endif %}">
+                        Profit/Loss: {{ entry.profit_loss }}
+                    </p>
                 </div>
-            {% endfor %}
-        </div>
-
-        <!-- Pie Chart -->
-        <h2>Portfolio Composition</h2>
-        {% if pie_chart %}
-            <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
-        {% else %}
-            <p>No data available for the pie chart.</p>
-        {% endif %}
-
-        <!-- Valuation Chart -->
-        <h2>Portfolio Valuation Over Time</h2>
-        {% if valuation_chart %}
-            <img src="data:image/png;base64,{{ valuation_chart }}" alt="Valuation Chart">
-        {% else %}
-            <p>No data available for the valuation chart.</p>
-        {% endif %}
-
-        <!-- Your form for adding new entries to the portfolio -->
-        <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
-            {% csrf_token %}
-            <label for="crypto_symbol">Cryptocurrency:</label>
-            <select id="crypto_symbol" name="crypto_symbol">
-                {% for crypto in dropdown_data %}
-                    <option value="{{ crypto.symbol }}">{{ crypto.name }}</option>
-                {% endfor %}
-            </select>
-
-            <label for="amount_owned">Amount Owned:</label>
-            <input type="number" id="amount_owned" name="amount_owned" step="0.01" required>
-        
-            <label for="purchase_price">Purchase Price:</label>
-            <input type="number" id="purchase_price" name="purchase_price" step="0.01" required>
-            
-            <button type="submit">Add to Portfolio</button>
-        </form>
-
-        <div class="auth-links">
-            <div class="dropdown">
-                <button class="dropbtn">My Account</button>
-                <div class="dropdown-content">
-                    <a href="{% url 'home' %}">Home</a>
-                    <a href="{% url 'settings' %}">Settings</a>
-                    <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
-                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
-                        {% csrf_token %}
-                    </form>
+                <div>
+                    {% if entry.id %}
+                        <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    {% else %}
+                        <p>No ID available for this entry.</p>
+                    {% endif %}
                 </div>
             </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pie Chart -->
+    <h2>Portfolio Composition</h2>
+    {% if pie_chart %}
+        <div class="chart-container pie-chart">
+            <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
         </div>
+    {% else %}
+        <p>No data available for the pie chart.</p>
     {% endif %}
+
+    <!-- Valuation Chart -->
+    <h2>Portfolio Valuation Over Time</h2>
+    {% if valuation_chart %}
+        <div class="chart-container valuation-chart">
+            <img src="data:image/png;base64,{{ valuation_chart }}" alt="Valuation Chart">
+        </div>
+    {% else %}
+        <p>No data available for the valuation chart.</p>
+    {% endif %}
+
+    <!-- Form for adding new entries to the portfolio -->
+    <form id="add-portfolio-form" method="POST" action="{% url 'add_to_portfolio' %}">
+        {% csrf_token %}
+        <label for="crypto_symbol">Cryptocurrency:</label>
+        <select id="crypto_symbol" name="crypto_symbol">
+            {% for crypto in dropdown_data %}
+                <option value="{{ crypto.symbol }}">{{ crypto.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="amount_owned">Amount Owned:</label>
+        <input type="number" id="amount_owned" name="amount_owned" step="0.01" required>
+    
+        <label for="purchase_price">Purchase Price:</label>
+        <input type="number" id="purchase_price" name="purchase_price" step="0.01" required>
+        
+        <button type="submit">Add to Portfolio</button>
+    </form>
+
+    <div class="auth-links">
+        <div class="dropdown">
+            <button class="dropbtn">My Account</button>
+            <div class="dropdown-content">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'settings' %}">Settings</a>
+                <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
+                <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

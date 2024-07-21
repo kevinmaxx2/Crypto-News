@@ -31,6 +31,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
+from django.core.exceptions import ValidationError
 def sanitize_price(price_str):
     if not isinstance(price_str, str):
         price_str = str(price_str)  # Convert non-string inputs to string
@@ -207,20 +208,28 @@ def add_to_portfolio(request):
         valid_symbols = [crypto['symbol'] for crypto in dropdown_data]
 
         if crypto_symbol in valid_symbols and amount_owned and purchase_price:
-            Portfolio.objects.create(
-                user=request.user,
-                crypto_symbol=crypto_symbol,
-                amount_owned=float(amount_owned),
-                purchase_price=float(purchase_price)
-            )
-            return redirect('portfolio')  # Redirect to the portfolio page
+            try:
+                Portfolio.objects.create(
+                    user=request.user,
+                    crypto_symbol=crypto_symbol,
+                    amount_owned=float(amount_owned),
+                    purchase_price=float(purchase_price)
+                )
+                return redirect('portfolio')  # Redirect to the portfolio page
+            except ValidationError as e:
+                logger.error(f"Error adding portfolio: {e}")
+                error_message = "There was an error processing your request. Please try again."
         else:
             logger.error(f"Invalid crypto_symbol: {crypto_symbol} or missing data")
-            # Handle invalid input (e.g., return an error message to the template)
+            error_message = "Invalid input. Please make sure all fields are filled correctly."
+
+        dropdown_data = fetch_dropdown_data()
+        return render(request, 'portfolio.html', {
+            'dropdown_data': dropdown_data,
+            'error': error_message
+        })
 
     dropdown_data = fetch_dropdown_data()
-    logger.debug(f"Dropdown Data passed to template: {dropdown_data}")
-
     return render(request, 'portfolio.html', {'dropdown_data': dropdown_data})
 
 @login_required
@@ -322,20 +331,22 @@ def register_view(request):
 
 @login_required
 def portfolio_view(request):
-    crypto_data = fetch_and_transform_crypto_data()  # Fetch data once
+    crypto_data = fetch_and_transform_crypto_data()
     portfolios = Portfolio.objects.filter(user=request.user)
+    
     portfolio_data = []
     for portfolio in portfolios:
-        current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)  # Pass crypto_data here
+        current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)
         current_value = current_price * portfolio.amount_owned
         profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
+        
         portfolio_data.append({
             'id': portfolio.id,
-            'crypto_name': portfolio.crypto_name,
+            'crypto_name': portfolio.crypto_name,  # Ensure crypto_name is correctly set
             'crypto_symbol': portfolio.crypto_symbol,
             'amount_owned': portfolio.amount_owned,
             'purchase_price': portfolio.purchase_price,
-            'purchase_date': portfolio.purchase_date,  # Add this line
+            'purchase_date': portfolio.purchase_date,
             'current_price': current_price,
             'current_value': current_value,
             'profit_loss': profit_loss,
@@ -345,10 +356,10 @@ def portfolio_view(request):
     valuation_chart_url = generate_valuation_chart(portfolio_data)
 
     context = {
-        'portfolios': portfolio_data,
+        'portfolio_data': portfolio_data,
         'dropdown_data': fetch_dropdown_data(),
-        'pie_chart_url': pie_chart_url,
-        'valuation_chart_url': valuation_chart_url,
+        'pie_chart': pie_chart_url,
+        'valuation_chart': valuation_chart_url,
     }
 
     return render(request, 'portfolio.html', context)
