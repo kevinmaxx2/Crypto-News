@@ -30,16 +30,16 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import pandas as pd
 from decimal import Decimal, InvalidOperation
-
+from io import BytesIO
 def sanitize_price(price_str):
     if not isinstance(price_str, str):
         price_str = str(price_str)  # Convert non-string inputs to string
     # Remove commas and other non-numeric characters
     cleaned_price = re.sub(r'[^\d.]', '', price_str)
     try:
-        return Decimal(cleaned_price)
-    except (ValueError, InvalidOperation):
-        logger.error(f"Invalid price format: {price_str}")
+        return Decimal(price_str.replace(',', ''))
+    except Exception as e:
+        logger.error(f"Error sanitizing price: {e}")
         return Decimal('0.00')
     
 def home_view(request):
@@ -156,7 +156,6 @@ def get_portfolio_data(request):
 
     return JsonResponse(data, safe=False)
 
-# Fetch Dropdown Data
 def fetch_dropdown_data():
     transformed_data = fetch_and_transform_crypto_data()
     if isinstance(transformed_data, list):
@@ -168,12 +167,16 @@ def fetch_dropdown_data():
 
     return dropdown_data
 
+
 def _fetch_current_price(crypto_symbol, crypto_data):
+    logger.debug(f"Fetching current price for symbol: {crypto_symbol}")
     for crypto in crypto_data:
         if crypto['symbol'] == crypto_symbol:
             price_str = crypto.get('price', '0')
             price = sanitize_price(price_str)
+            logger.debug(f"Found price for {crypto_symbol}: {price}")
             return price
+    logger.error(f"No price found for symbol: {crypto_symbol}")
     return Decimal('0.00')  # Default value if symbol is not found in the list
 
 def _calculate_current_value(crypto_symbol, crypto_data, amount_owned):
@@ -319,38 +322,36 @@ def register_view(request):
 
 @login_required
 def portfolio_view(request):
-    logger.debug('Rendering portfolio view')
+    crypto_data = fetch_and_transform_crypto_data()  # Fetch data once
     portfolios = Portfolio.objects.filter(user=request.user)
-    crypto_data = fetch_and_transform_crypto_data()
     portfolio_data = []
-
     for portfolio in portfolios:
-        try:
-            current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)
-            current_value = round(portfolio.amount_owned * current_price, 2)
-            profit_loss = round((current_price - portfolio.purchase_price) * portfolio.amount_owned, 2)
-            portfolio_data.append({
-                'crypto_name': portfolio.crypto_name,
-                'crypto_symbol': portfolio.crypto_symbol,
-                'amount_owned': portfolio.amount_owned,
-                'purchase_price': portfolio.purchase_price,
-                'current_price': current_price,
-                'current_value': current_value,
-                'profit_loss': profit_loss
-            })
-        except Exception as e:
-            logger.error(f'Error calculating portfolio data for {portfolio.crypto_name}: {str(e)}')
-            portfolio_data.append({
-                'crypto_name': portfolio.crypto_name,
-                'crypto_symbol': portfolio.crypto_symbol,
-                'amount_owned': portfolio.amount_owned,
-                'purchase_price': portfolio.purchase_price,
-                'current_price': 'Error',
-                'current_value': 'Error',
-                'profit_loss': 'Error'
-            })
+        current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)  # Pass crypto_data here
+        current_value = current_price * portfolio.amount_owned
+        profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
+        portfolio_data.append({
+            'id': portfolio.id,
+            'crypto_name': portfolio.crypto_name,
+            'crypto_symbol': portfolio.crypto_symbol,
+            'amount_owned': portfolio.amount_owned,
+            'purchase_price': portfolio.purchase_price,
+            'purchase_date': portfolio.purchase_date,  # Add this line
+            'current_price': current_price,
+            'current_value': current_value,
+            'profit_loss': profit_loss,
+        })
 
-    return render(request, 'portfolio.html', {'portfolio_data': portfolio_data})
+    pie_chart_url = generate_pie_chart(portfolio_data)
+    valuation_chart_url = generate_valuation_chart(portfolio_data)
+
+    context = {
+        'portfolios': portfolio_data,
+        'dropdown_data': fetch_dropdown_data(),
+        'pie_chart_url': pie_chart_url,
+        'valuation_chart_url': valuation_chart_url,
+    }
+
+    return render(request, 'portfolio.html', context)
 
 def calculate_portfolio_summary(portfolio_data, crypto_data):
     summary = {}
@@ -390,78 +391,40 @@ def calculate_valuation_over_time(portfolio_data, crypto_data):
     
     return valuation_over_time
 
-@login_required
-def create_pie_chart(request):
-    portfolios = Portfolio.objects.filter(user=request.user)
-    crypto_data = fetch_and_transform_crypto_data()
-    labels = []
-    sizes = []
-
-    for portfolio in portfolios:
-        current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)
-        current_value = portfolio.amount_owned * current_price
-        labels.append(portfolio.crypto_name)
-        sizes.append(current_value)
+def generate_pie_chart(portfolio_data):
+    labels = [entry['crypto_symbol'] for entry in portfolio_data]
+    sizes = [entry['current_value'] for entry in portfolio_data]
 
     fig, ax = plt.subplots()
     ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')
-    plt.title('Portfolio Composition')
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    image_png = buffer.getvalue()
-    buffer.close()
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    plt.close(fig)
+    return f'data:image/png;base64,{image_base64}'
 
-    image_base64 = base64.b64encode(image_png).decode('utf-8')
 
-    return render(request, 'pie_chart.html', {'pie_chart': image_base64})
-
-@login_required
-def create_valuation_chart(request):
-    portfolios = Portfolio.objects.filter(user=request.user)
-    crypto_data = fetch_and_transform_crypto_data()
-    labels = ['1 Year Ago', '6 Months Ago', '1 Month Ago', '7 Days Ago']
-    valuation_data = {label: 0 for label in labels}
-
-    for portfolio in portfolios:
-        crypto_symbol = portfolio.crypto_symbol
-
-        historical_data = fetch_historical_data(crypto_symbol)
-        if not historical_data:
-            logger.warning(f'No historical data found for {crypto_symbol}')
-            continue
-
-        for label, timestamp in [
-            ('1 Year Ago', int(time.time()) - 31536000),
-            ('6 Months Ago', int(time.time()) - 15768000),
-            ('1 Month Ago', int(time.time()) - 2628000),
-            ('7 Days Ago', int(time.time()) - 604800)
-        ]:
-            price_at_timestamp = historical_data.get(timestamp)
-            if price_at_timestamp:
-                valuation_data[label] += price_at_timestamp * portfolio.amount_owned
-            else:
-                logger.warning(f'No price data for {crypto_symbol} at {label}')
+def generate_valuation_chart(portfolio_data):
+    dates = [entry['purchase_date'] for entry in portfolio_data]  # Make sure 'purchase_date' is included in portfolio_data
+    values = [entry['current_value'] for entry in portfolio_data]
 
     fig, ax = plt.subplots()
-    ax.bar(labels, valuation_data.values(), color='blue')
-    plt.xlabel('Time Period')
-    plt.ylabel('Valuation in USD')
-    plt.title('Portfolio Valuation Over Time')
+    ax.plot(dates, values)
 
-    buffer = io.BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    image_png = buffer.getvalue()
-    buffer.close()
+    ax.set(xlabel='Date', ylabel='Value',
+           title='Portfolio Valuation Over Time')
+    ax.grid()
 
-    image_base64 = base64.b64encode(image_png).decode('utf-8')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    plt.close(fig)
+    return f'data:image/png;base64,{image_base64}'
 
-    return render(request, 'valuation_chart.html', {'valuation_chart': image_base64})
-
-@login_required
 def create_portfolio_view(request):
     if request.method == 'POST':
         form = PortfolioForm(request.POST)
