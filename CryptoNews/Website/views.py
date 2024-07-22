@@ -419,14 +419,13 @@ def generate_pie_chart(portfolio_data):
 
 
 def generate_valuation_chart(portfolio_data):
-    dates = [entry['purchase_date'] for entry in portfolio_data]  # Make sure 'purchase_date' is included in portfolio_data
+    dates = [entry['purchase_date'] for entry in portfolio_data]
     values = [entry['current_value'] for entry in portfolio_data]
 
     fig, ax = plt.subplots()
     ax.plot(dates, values)
 
-    ax.set(xlabel='Date', ylabel='Value',
-           title='Portfolio Valuation Over Time')
+    ax.set(xlabel='Date', ylabel='Value', title='Portfolio Valuation Over Time')
     ax.grid()
 
     buf = io.BytesIO()

@@ -338,7 +338,7 @@
     <h2>Portfolio Composition</h2>
     {% if pie_chart %}
         <div class="chart-container pie-chart">
-            <img src="data:image/png;base64,{{ pie_chart }}" alt="Pie Chart">
+            <img src="{{ pie_chart }}" alt="Pie Chart">
         </div>
     {% else %}
         <p>No data available for the pie chart.</p>
@@ -348,7 +348,7 @@
     <h2>Portfolio Valuation Over Time</h2>
     {% if valuation_chart %}
         <div class="chart-container valuation-chart">
-            <img src="data:image/png;base64,{{ valuation_chart }}" alt="Valuation Chart">
+            <img src="{{ valuation_chart }}" alt="Valuation Chart">
         </div>
     {% else %}
         <p>No data available for the valuation chart.</p>
