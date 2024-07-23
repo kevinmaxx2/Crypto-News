@@ -50,7 +50,7 @@ def home_view(request):
 
 def fetch_and_transform_crypto_data():
     logger.debug("Fetching and transforming crypto data")
-    
+
     # Attempt to get cached data
     cached_data = cache.get('crypto_data')
     if cached_data:
@@ -73,13 +73,15 @@ def fetch_and_transform_crypto_data():
         response.raise_for_status()
         data = response.json()
 
-        # Initialize the lists and dictionary
         transformed_data = []
         coin_map = {}
 
         for crypto in data:
             symbol = crypto.get('symbol', '').upper()
             coin_id = crypto.get('id', '')
+
+            image_url = crypto.get('image', '')
+            logger.debug(f'Crypto: {crypto.get("name", "")}, Image URL: {image_url}')
 
             # Add entry to transformed_data
             transformed_data.append({
@@ -88,12 +90,20 @@ def fetch_and_transform_crypto_data():
                 'price': sanitize_price(crypto.get('current_price', '0')),
                 'price_change_percentage_24h': crypto.get('price_change_percentage_24h', 'N/A'),
                 'marketcap': _format_marketcap(crypto.get('market_cap', 0)),
-                'image': crypto.get('image', '')
+                'image': image_url
             })
 
             # Add entry to coin_map
             if symbol and coin_id:
                 coin_map[symbol] = coin_id
+
+        # Cache the transformed data
+        cache.set('crypto_data', transformed_data, timeout=60*5)
+        return transformed_data
+
+    except requests.RequestException as e:
+        logger.error(f'Error fetching data from CoinGecko: {e}')
+        return []
 
         # Cache the result
         cache.set('crypto_data', (transformed_data, coin_map), timeout=3600)  # Cache for 1 hour

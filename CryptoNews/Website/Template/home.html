@@ -526,6 +526,7 @@
             event.preventDefault();  // Prevent the form from submitting the traditional way
     
             const formData = new FormData(this);
+            console.log('Login Form Data:', formData); // Debugging log
             fetch('/ajax_login/', {
                 method: 'POST',
                 body: formData,
@@ -535,14 +536,15 @@
                 }
             })
             .then(response => {
-                console.log('Response status:', response.status);  // Debugging log
+                console.log('Login Response URL:', response.url);  // Debugging log
+                console.log('Login Response status:', response.status);  // Debugging log
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);  // Debugging log
+                console.log('Login Response data:', data);  // Debugging log
                 if (data.success) {
                     window.location.reload();
                 } else {
@@ -572,7 +574,7 @@
                     displayErrorMessage('Passwords do not match!');
                     return;
                 }
-            // Validate password format
+                // Validate password format
                 const passwordValidationResult = validatePassword(password);
                 if (passwordValidationResult !== true) {
                     displayErrorMessage(passwordValidationResult);
@@ -597,6 +599,7 @@
                 checkDuplicate(email, phoneNumber);
             };
         }
+        
         // Function to validate password format
         function validatePassword(password) {
             // Regular expression for password validation
@@ -608,6 +611,7 @@
 
             return true; // Password is valid
         }
+        
         // Function to check for duplicated email and phone number
         function checkDuplicate(email, phoneNumber) {
             const requestData = {
@@ -616,6 +620,8 @@
                 csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
             };
     
+            console.log('Check Duplicate Request Data:', requestData); // Debugging log
+            
             fetch('/check_duplicate/', {
                 method: 'POST',
                 headers: {
@@ -625,13 +631,14 @@
                 body: JSON.stringify(requestData)
             })
             .then(response => {
+                console.log('Check Duplicate Response URL:', response.url);  // Debugging log
                 if (!response.ok) {
                     throw new Error('Failed to check duplicates');
                 }
                 return response.json(); // Parse JSON response
             })
             .then(data => {
-                console.log('Duplicate check response:', data);
+                console.log('Check Duplicate Response data:', data); // Debugging log
                 if (data.email_exists) {
                     displayErrorMessage('Email already exists. Please choose a different one.');
                 } else if (data.phone_number_exists) {
@@ -662,6 +669,8 @@
                 csrfmiddlewaretoken: getCookie('csrftoken')  // Include CSRF token in the request payload
             };
     
+            console.log('Submit Registration Request Data:', requestData); // Debugging log
+
             fetch(registerForm.action, {
                 method: 'POST',
                 headers: {
@@ -671,13 +680,14 @@
                 body: JSON.stringify(requestData)
             })
             .then(response => {
+                console.log('Registration Response URL:', response.url);  // Debugging log
                 if (!response.ok) {
                     throw new Error('Failed to register');
                 }
                 return response.json(); // Parse JSON response
             })
             .then(data => {
-                console.log('Registration response:', data);
+                console.log('Registration Response data:', data); // Debugging log
                 if (data.success) {
                     console.log('Registration successful:', data.message);
                     registerModal.style.display = "none"; // Close modal on success
@@ -746,8 +756,14 @@
             }
         }
     });
+
+    // Fetch crypto list data
+    console.log('Fetching crypto list data from /api/crypto-list-data/');
     fetch('/api/crypto-list-data/')
-        .then(response => response.json())
+        .then(response => {
+            console.log('Crypto List Response URL:', response.url); // Debugging log
+            return response.json();
+        })
         .then(data => {
             console.log('List data:', data);
             populateCryptoTable(data);
@@ -758,30 +774,34 @@
         });
 
     function populateCryptoTable(data) {
-    console.log('Populating table with data:', data);
-    const tableBody = document.querySelector('#cryptoTable tbody');
-    tableBody.innerHTML = ''; // Clear existing rows
+        console.log('Populating table with data:', data);
+        const tableBody = document.querySelector('#cryptoTable tbody');
+        tableBody.innerHTML = ''; // Clear existing rows
 
-    data.forEach((crypto, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <th scope="row">${index + 1}</th>
-            <td><img src="${crypto.image}" alt="${crypto.name}" class="crypto-image">${crypto.name} (${crypto.symbol})</td>
-            <td>${crypto.price}</td>
-            <td>${crypto.price_change_percentage_24h !== undefined && crypto.price_change_percentage_24h !== null
-                ? (crypto.price_change_percentage_24h >= 0
-                    ? `<span class="text-success">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`
-                    : `<span class="text-danger">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`)
-                : 'N/A'
-            }</td>
-            <td>${crypto.marketcap}</td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
+        data.forEach((crypto, index) => {
+            console.log('Crypto object:', crypto);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <th scope="row">${index + 1}</th>
+                <td><img src="${crypto.image}" alt="${crypto.name}" class="crypto-image">${crypto.name} (${crypto.symbol})</td>
+                <td>${crypto.price}</td>
+                <td>${crypto.price_change_percentage_24h !== undefined && crypto.price_change_percentage_24h !== null
+                    ? (crypto.price_change_percentage_24h >= 0
+                        ? `<span class="text-success">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`
+                        : `<span class="text-danger">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`)
+                    : 'N/A'
+                }</td>
+                <td>${crypto.marketcap}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
     function fetchInitialData() {
+        console.log('Fetching initial crypto data from /api/crypto-data/');
         fetch('/api/crypto-data/')
             .then(response => {
+                console.log('Initial Crypto Data Response URL:', response.url); // Debugging log
                 if (!response.ok) {
                     throw new Error('Failed to fetch crypto data');
                 }
@@ -831,4 +851,4 @@
         var value = e.target.value;
         e.target.value = value.replace(/[^\d\+\(\)\s-]/g, '');
     });
-    </script>
+</script>
