@@ -5,6 +5,7 @@ import logging
 import io
 import base64
 import matplotlib
+import random
 matplotlib.use('Agg')
 import re
 from datetime import datetime
@@ -32,6 +33,7 @@ import pandas as pd
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
 from django.core.exceptions import ValidationError
+from requests.exceptions import HTTPError
 def sanitize_price(price_str):
     if not isinstance(price_str, str):
         price_str = str(price_str)  # Convert non-string inputs to string
@@ -333,73 +335,92 @@ def register_view(request):
 def portfolio_view(request):
     crypto_data = fetch_and_transform_crypto_data()
     portfolios = Portfolio.objects.filter(user=request.user)
-    
+
     portfolio_data = []
     for portfolio in portfolios:
         current_price = _fetch_current_price(portfolio.crypto_symbol, crypto_data)
-        current_value = current_price * portfolio.amount_owned
+        current_value = Decimal(current_price) * portfolio.amount_owned
         profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
-        
+
         portfolio_data.append({
             'id': portfolio.id,
-            'crypto_name': portfolio.crypto_name,  # Ensure crypto_name is correctly set
+            'crypto_name': portfolio.crypto_name,
             'crypto_symbol': portfolio.crypto_symbol,
             'amount_owned': portfolio.amount_owned,
             'purchase_price': portfolio.purchase_price,
             'purchase_date': portfolio.purchase_date,
-            'current_price': current_price,
+            'current_price': Decimal(current_price),
             'current_value': current_value,
             'profit_loss': profit_loss,
         })
 
-    pie_chart_url = generate_pie_chart(portfolio_data)
-    valuation_chart_url = generate_valuation_chart(portfolio_data)
+    # Fetch the coin map
+    coin_map = get_available_coins()
+
+    # Pass coin_map to calculate_valuation_over_time
+    valuation_data = calculate_valuation_over_time(portfolio_data, crypto_data, coin_map)
+    valuation_chart_url = generate_valuation_chart(valuation_data)
 
     context = {
         'portfolio_data': portfolio_data,
         'dropdown_data': fetch_dropdown_data(),
-        'pie_chart': pie_chart_url,
+        'pie_chart': generate_pie_chart(portfolio_data),
         'valuation_chart': valuation_chart_url,
     }
 
     return render(request, 'portfolio.html', context)
 
-def calculate_portfolio_summary(portfolio_data, crypto_data):
-    summary = {}
-    total_value = 0
+def calculate_valuation_over_time(portfolio_data, crypto_data, coin_map):
+    dates = ['7 days ago', '30 days ago', '180 days ago', '365 days ago']
+    valuation_over_time = {date: 0 for date in dates}
 
-    for entry in portfolio_data:
-        symbol = entry.get('crypto_symbol')
-        amount_owned = float(entry.get('amount_owned', 0))
-        
-        current_price = _fetch_current_price(symbol, crypto_data)
-        value = current_price * amount_owned
-        summary[symbol] = value
-        total_value += value
-
-    return summary, total_value
-
-
-def calculate_valuation_over_time(portfolio_data, crypto_data):
-    valuation_over_time = []
-    
     for item in portfolio_data:
         crypto_info = next((crypto for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), None)
-        
+
         if crypto_info:
-            historical_prices = crypto_info.get('historical_prices', {})
-            
-            if not historical_prices:
-                logger.warning(f"No historical prices available for symbol {item['crypto_symbol']}")
-            
-            valuation = {
-                'symbol': item['crypto_symbol'],
-                'prices': historical_prices  # This is just an example
-            }
-            valuation_over_time.append(valuation)
+            historical_prices = {date: fetch_historical_data(item['crypto_symbol'], days_ago, coin_map) for date, days_ago in zip(dates, [7, 30, 180, 365])}
+
+            if not any(historical_prices.values()):  # Check if all values are zero
+                logger.warning(f"Incomplete historical prices for symbol {item['crypto_symbol']}")
+
+            for date in dates:
+                price = historical_prices.get(date, 0)
+                if price > 0:  # Only accumulate if price is valid
+                    valuation_over_time[date] += Decimal(price) * item['amount_owned']
+                else:
+                    logger.warning(f"Invalid price for {item['crypto_symbol']} on {date}: {price}")
+
         else:
             logger.warning(f"No data found for symbol {item['crypto_symbol']}")
-    
+
+    logger.debug(f"Valuation over time: {valuation_over_time}")
+    return valuation_over_time
+
+
+def calculate_valuation_over_time(portfolio_data, crypto_data, coin_map):
+    dates = ['7 days ago', '30 days ago', '180 days ago', '365 days ago']
+    valuation_over_time = {date: 0 for date in dates}
+
+    for item in portfolio_data:
+        crypto_info = next((crypto for crypto in crypto_data if crypto['symbol'] == item['crypto_symbol']), None)
+
+        if crypto_info:
+            historical_prices = {date: fetch_historical_data(item['crypto_symbol'], days_ago, coin_map) for date, days_ago in zip(dates, [7, 30, 180, 365])}
+
+            if not any(historical_prices.values()):  # Check if all values are zero
+                logger.warning(f"Incomplete historical prices for symbol {item['crypto_symbol']}")
+
+            for date in dates:
+                price = historical_prices.get(date, 0)
+                if price > 0:  # Only accumulate if price is valid
+                    valuation_over_time[date] += float(price) * float(item['amount_owned'])
+                else:
+                    logger.warning(f"Invalid price for {item['crypto_symbol']} on {date}: {price}")
+
+        else:
+            logger.warning(f"No data found for symbol {item['crypto_symbol']}")
+
+    logger.debug(f"Valuation over time: {valuation_over_time}")
     return valuation_over_time
 
 def generate_pie_chart(portfolio_data):
@@ -418,15 +439,17 @@ def generate_pie_chart(portfolio_data):
     return f'data:image/png;base64,{image_base64}'
 
 
-def generate_valuation_chart(portfolio_data):
-    dates = [entry['purchase_date'] for entry in portfolio_data]
-    values = [entry['current_value'] for entry in portfolio_data]
+def generate_valuation_chart(valuation_data):
+    dates = list(valuation_data.keys())
+    values = list(valuation_data.values())
 
     fig, ax = plt.subplots()
-    ax.plot(dates, values)
+    ax.plot(dates, values, marker='o', linestyle='-', color='b')
 
-    ax.set(xlabel='Date', ylabel='Value', title='Portfolio Valuation Over Time')
+    ax.set(xlabel='Date', ylabel='Total Value (USD)',
+           title='Portfolio Valuation Over Time')
     ax.grid()
+    plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -526,9 +549,70 @@ def get_crypto_id_from_symbol(symbol):
         return data[0]['id']
     return None
 
-def fetch_historical_data(crypto_symbol, days_ago):
+def get_available_coins():
+    url = 'https://api.coingecko.com/api/v3/coins/list'
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        coins = response.json()
+        logger.debug(f"Available coins fetched: {coins[:10]}")  # Log first 10 entries for a quick check
+
+        # Create a dictionary to hold the mappings with some known correct mappings
+        coin_map = {}
+        known_coins = {
+            'BTC': 'bitcoin',
+            'ETH': 'ethereum',
+            'LTC': 'litecoin',
+            'XRP': 'ripple',
+            'BCH': 'bitcoin-cash',
+            'ADA': 'cardano',
+            'DOT': 'polkadot',
+            'LINK': 'chainlink',
+            'BNB': 'binancecoin',
+            'USDT': 'tether',
+            'DOGE': 'dogecoin',
+            # Add more known mappings as needed
+        }
+
+        # Add known mappings to the coin_map first
+        for symbol, coin_id in known_coins.items():
+            coin_map[symbol] = coin_id
+
+        # Update the coin_map with API data, ensuring known mappings are not overwritten
+        for coin in coins:
+            symbol = coin['symbol'].upper()
+            if symbol not in coin_map:
+                coin_map[symbol] = coin['id']
+
+        logger.debug(f"Coin map created: {coin_map}")
+
+        # Check for specific symbols and their corresponding IDs
+        for symbol, expected_id in known_coins.items():
+            actual_id = coin_map.get(symbol)
+            if actual_id == expected_id:
+                logger.debug(f"Symbol {symbol} correctly maps to {expected_id}")
+            else:
+                logger.warning(f"Symbol {symbol} maps to {actual_id} instead of {expected_id}")
+
+        return coin_map
+    except requests.RequestException as e:
+        logger.error(f"Error fetching available coins: {str(e)}")
+        return {}
+    
+def fetch_historical_data(crypto_symbol, days_ago, coin_map):
+    coin_id = coin_map.get(crypto_symbol.upper())  # Ensure we are using upper case for lookup
+    if not coin_id:
+        logger.error(f"Symbol {crypto_symbol} not found in available coins")
+        return 0
+    
+    cache_key = f'{coin_id}_price_{days_ago}'
+    cached_price = cache.get(cache_key)
+    if cached_price is not None:
+        logger.debug(f"Cache hit for {cache_key}: {cached_price}")
+        return cached_price
+
     logger.debug(f"Fetching historical data for symbol: {crypto_symbol}, days ago: {days_ago}")
-    url = f'https://api.coingecko.com/api/v3/coins/{crypto_symbol}/market_chart'
+    url = f'https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart'
     params = {
         'vs_currency': 'usd',
         'days': days_ago,
@@ -537,12 +621,20 @@ def fetch_historical_data(crypto_symbol, days_ago):
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
-        logger.debug(f"Fetched data for {crypto_symbol}: {data}")
-        return data['prices'][-1][1]  # Return the price on the last date of the given period
+        
+        if data['prices']:
+            price = data['prices'][-1][1]
+            cache.set(cache_key, price, timeout=3600)  # Cache for 1 hour
+            logger.debug(f"Price for {coin_id} on {days_ago} days ago: {price}")
+            return price
+        else:
+            logger.warning(f"No price data available for {coin_id} for {days_ago} days ago")
+            return 0
     except requests.RequestException as e:
-        logger.error(f"Error fetching historical data for {crypto_symbol}: {str(e)}")
-        return None
-
+        logger.error(f"Error fetching historical data for {coin_id}: {str(e)}")
+        return 0
+        
+    
 def fetch_portfolio_values(portfolio):
     values = {}
     for crypto in portfolio:
