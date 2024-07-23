@@ -50,6 +50,8 @@ def home_view(request):
 
 def fetch_and_transform_crypto_data():
     logger.debug("Fetching and transforming crypto data")
+    
+    # Attempt to get cached data
     cached_data = cache.get('crypto_data')
     if cached_data:
         logger.debug('Returning cached data')
@@ -71,6 +73,7 @@ def fetch_and_transform_crypto_data():
         response.raise_for_status()
         data = response.json()
 
+        # Initialize the lists and dictionary
         transformed_data = []
         coin_map = {}
 
@@ -78,6 +81,7 @@ def fetch_and_transform_crypto_data():
             symbol = crypto.get('symbol', '').upper()
             coin_id = crypto.get('id', '')
 
+            # Add entry to transformed_data
             transformed_data.append({
                 'name': crypto.get('name', ''),
                 'symbol': symbol,
@@ -87,8 +91,11 @@ def fetch_and_transform_crypto_data():
                 'image': crypto.get('image', '')
             })
 
-            coin_map[symbol] = coin_id
+            # Add entry to coin_map
+            if symbol and coin_id:
+                coin_map[symbol] = coin_id
 
+        # Cache the result
         cache.set('crypto_data', (transformed_data, coin_map), timeout=3600)  # Cache for 1 hour
         logger.debug('Fetched and cached new data')
         logger.debug(f'Transformed data: {transformed_data}')
@@ -97,6 +104,7 @@ def fetch_and_transform_crypto_data():
 
     except requests.RequestException as e:
         logger.error(f'Error fetching data: {str(e)}')
+        # Return empty data and coin_map in case of error
         return [], {}
     
 def get_crypto_data(request):
@@ -180,15 +188,24 @@ def fetch_dropdown_data():
     return dropdown_data
 
 
-def _fetch_current_price(crypto_symbols):
+def _fetch_current_price(crypto_symbols, coin_map):
+    # Ensure coin_map is a dictionary
+    if not isinstance(coin_map, dict):
+        raise ValueError("coin_map must be a dictionary")
+    
+    # Ensure all symbols are mapped in coin_map
+    missing_symbols = [symbol for symbol in crypto_symbols if symbol not in coin_map]
+    if missing_symbols:
+        raise ValueError(f"Missing symbols in coin_map: {missing_symbols}")
+    
     cache_key = 'current_prices'
     cached_data = cache.get(cache_key)
     if cached_data:
-        return cached_data
+        return {symbol: cached_data.get(symbol, 0) for symbol in crypto_symbols}
 
     url = 'https://api.coingecko.com/api/v3/simple/price'
     params = {
-        'ids': ','.join(crypto_symbols),
+        'ids': ','.join([coin_map.get(symbol, '') for symbol in crypto_symbols]),
         'vs_currencies': 'usd'
     }
     try:
@@ -196,10 +213,10 @@ def _fetch_current_price(crypto_symbols):
         response.raise_for_status()
         prices = response.json()
         cache.set(cache_key, prices, timeout=3600)  # Cache for 1 hour
-        return prices
+        return {symbol: prices.get(coin_map.get(symbol, ''), {}).get('usd', 0) for symbol in crypto_symbols}
     except requests.RequestException as e:
         logger.error(f"Error fetching current prices: {str(e)}")
-        return {}
+        return {symbol: 0 for symbol in crypto_symbols}
 
 def _calculate_current_value(crypto_symbol, crypto_data, amount_owned):
     current_price = _fetch_current_price(crypto_symbol, crypto_data)
@@ -364,7 +381,8 @@ def portfolio_view(request):
     for portfolio in portfolios:
         logger.debug(f"Processing portfolio: {portfolio}")
 
-        current_price = _fetch_current_price([portfolio.crypto_symbol], crypto_data)[portfolio.crypto_symbol]
+        # Pass coin_map instead of crypto_data to _fetch_current_price
+        current_price = _fetch_current_price([portfolio.crypto_symbol], coin_map)[portfolio.crypto_symbol]
         current_value = current_price * portfolio.amount_owned
         profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
 
@@ -396,53 +414,27 @@ def portfolio_view(request):
 
 def calculate_valuation_over_time(portfolio_data, crypto_data, coin_map):
     logger.debug("Calculating valuation over time")
-    dates = ['7 days ago', '30 days ago', '180 days ago', '365 days ago']
-    historical_prices = {}
-
-    try:
-        for item in portfolio_data:
-            symbol = item['crypto_symbol']
-            logger.debug(f"Calculating historical prices for {symbol}")
-            historical_prices[symbol] = fetch_historical_data_bulk(
-                [symbol], [7, 30, 180, 365], coin_map
-            )
-
-        logger.debug(f"Historical prices: {historical_prices}")
-
-        valuation_data = {}
-        for date, days_ago in zip(dates, [7, 30, 180, 365]):
-            total_value = 0
-            for item in portfolio_data:
-                symbol = item['crypto_symbol']
-                price_on_date = historical_prices[symbol][days_ago] if symbol in historical_prices and days_ago < len(historical_prices[symbol]) else 0
-                total_value += price_on_date * item['amount_owned']
-            valuation_data[date] = total_value
-            logger.debug(f"Total value on {date}: {total_value}")
-
-        logger.debug(f"Valuation data: {valuation_data}")
-        return valuation_data
-    except Exception as e:
-        logger.error(f"Error calculating valuation: {e}")
-        return {}
-
-def calculate_valuation_over_time(portfolio_data, crypto_data, coin_map):
+    
+    # Define time periods and corresponding days
     dates = ['7 days ago', '30 days ago', '180 days ago', '365 days ago']
     days_ago_list = [7, 30, 180, 365]
-    valuation_over_time = {date: 0 for date in dates}
+    valuation_over_time = {date: Decimal('0') for date in dates}
 
-    # Get a list of unique symbols
+    # Get unique crypto symbols
     crypto_symbols = list(set(item['crypto_symbol'] for item in portfolio_data))
-
-    # Fetch historical data
+    
+    # Fetch historical data for these symbols
     historical_prices = fetch_historical_data_bulk(crypto_symbols, days_ago_list, coin_map)
 
     for item in portfolio_data:
         symbol = item['crypto_symbol']
+        amount_owned = Decimal(item['amount_owned'])
+
         if symbol in historical_prices:
             for idx, date in enumerate(dates):
-                price = historical_prices[symbol][idx] if len(historical_prices[symbol]) > idx else 0
+                price = Decimal(historical_prices[symbol][idx]) if len(historical_prices[symbol]) > idx else Decimal('0')
                 if price > 0:
-                    valuation_over_time[date] += price * item['amount_owned']
+                    valuation_over_time[date] += price * amount_owned
                 else:
                     logger.warning(f"Invalid price for {symbol} on {date}: {price}")
         else:
