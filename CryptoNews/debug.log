@@ -11608,3 +11608,88 @@ Traceback (most recent call last):
     ^^^^^^^^^^^^^^^^^^^^^
 ValueError: too many values to unpack (expected 2)
 ERROR 2024-07-23 13:21:42,945 basehttp "GET /portfolio/ HTTP/1.1" 500 77600
+INFO 2024-07-24 08:31:54,982 autoreload Watching for file changes with StatReloader
+INFO 2024-07-24 08:32:12,066 basehttp "GET / HTTP/1.1" 200 31107
+DEBUG 2024-07-24 08:32:13,443 views Fetching and transforming crypto data
+DEBUG 2024-07-24 08:32:13,447 views Fetching and transforming crypto data
+DEBUG 2024-07-24 08:32:13,819 views Crypto: Bitcoin, Image URL: https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400
+DEBUG 2024-07-24 08:32:13,820 views Crypto: Ethereum, Image URL: https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628
+DEBUG 2024-07-24 08:32:13,822 views Crypto: Tether, Image URL: https://coin-images.coingecko.com/coins/images/325/large/Tether.png?1696501661
+DEBUG 2024-07-24 08:32:13,823 views Crypto: BNB, Image URL: https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970
+DEBUG 2024-07-24 08:32:13,824 views Crypto: Bitcoin, Image URL: https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400
+DEBUG 2024-07-24 08:32:13,824 views Crypto: Solana, Image URL: https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756
+DEBUG 2024-07-24 08:32:13,825 views Crypto: Ethereum, Image URL: https://coin-images.coingecko.com/coins/images/279/large/ethereum.png?1696501628
+DEBUG 2024-07-24 08:32:13,825 views Crypto: XRP, Image URL: https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442
+DEBUG 2024-07-24 08:32:13,825 views Crypto: Tether, Image URL: https://coin-images.coingecko.com/coins/images/325/large/Tether.png?1696501661
+DEBUG 2024-07-24 08:32:13,826 views Crypto: USDC, Image URL: https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694
+DEBUG 2024-07-24 08:32:13,827 views Crypto: BNB, Image URL: https://coin-images.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970
+DEBUG 2024-07-24 08:32:13,827 views Crypto: Lido Staked Ether, Image URL: https://coin-images.coingecko.com/coins/images/13442/large/steth_logo.png?1696513206
+DEBUG 2024-07-24 08:32:13,828 views Crypto: Solana, Image URL: https://coin-images.coingecko.com/coins/images/4128/large/solana.png?1718769756
+DEBUG 2024-07-24 08:32:13,829 views Crypto: Dogecoin, Image URL: https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409
+DEBUG 2024-07-24 08:32:13,829 views Crypto: XRP, Image URL: https://coin-images.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png?1696501442
+DEBUG 2024-07-24 08:32:13,829 views Crypto: Toncoin, Image URL: https://coin-images.coingecko.com/coins/images/17980/large/ton_symbol.png?1696517498
+DEBUG 2024-07-24 08:32:13,831 views Crypto: USDC, Image URL: https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694
+DEBUG 2024-07-24 08:32:13,831 views Crypto: Cardano, Image URL: https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090
+DEBUG 2024-07-24 08:32:13,831 views Crypto: Lido Staked Ether, Image URL: https://coin-images.coingecko.com/coins/images/13442/large/steth_logo.png?1696513206
+DEBUG 2024-07-24 08:32:13,832 views Crypto: Avalanche, Image URL: https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png?1696512369
+DEBUG 2024-07-24 08:32:13,832 views Crypto: Dogecoin, Image URL: https://coin-images.coingecko.com/coins/images/5/large/dogecoin.png?1696501409
+DEBUG 2024-07-24 08:32:13,833 views Crypto: TRON, Image URL: https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png?1696502193
+DEBUG 2024-07-24 08:32:13,833 views Crypto: Toncoin, Image URL: https://coin-images.coingecko.com/coins/images/17980/large/ton_symbol.png?1696517498
+DEBUG 2024-07-24 08:32:13,833 views Crypto: Wrapped Bitcoin, Image URL: https://coin-images.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1696507857
+DEBUG 2024-07-24 08:32:13,834 views Crypto: Cardano, Image URL: https://coin-images.coingecko.com/coins/images/975/large/cardano.png?1696502090
+DEBUG 2024-07-24 08:32:13,835 views Crypto: Shiba Inu, Image URL: https://coin-images.coingecko.com/coins/images/11939/large/shiba.png?1696511800
+DEBUG 2024-07-24 08:32:13,835 views Crypto: Avalanche, Image URL: https://coin-images.coingecko.com/coins/images/12559/large/Avalanche_Circle_RedWhite_Trans.png?1696512369
+DEBUG 2024-07-24 08:32:13,836 views Crypto: Chainlink, Image URL: https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png?1696502009
+DEBUG 2024-07-24 08:32:13,837 views Crypto: TRON, Image URL: https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png?1696502193
+DEBUG 2024-07-24 08:32:13,837 views Crypto: Polkadot, Image URL: https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png?1696512008
+DEBUG 2024-07-24 08:32:13,838 views Crypto: Wrapped Bitcoin, Image URL: https://coin-images.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1696507857
+DEBUG 2024-07-24 08:32:13,839 views Crypto: Bitcoin Cash, Image URL: https://coin-images.coingecko.com/coins/images/780/large/bitcoin-cash-circle.png?1696501932
+DEBUG 2024-07-24 08:32:13,839 views Crypto: Shiba Inu, Image URL: https://coin-images.coingecko.com/coins/images/11939/large/shiba.png?1696511800
+DEBUG 2024-07-24 08:32:13,840 views Crypto: NEAR Protocol, Image URL: https://coin-images.coingecko.com/coins/images/10365/large/near.jpg?1696510367
+DEBUG 2024-07-24 08:32:13,840 views Crypto: Chainlink, Image URL: https://coin-images.coingecko.com/coins/images/877/large/chainlink-new-logo.png?1696502009
+DEBUG 2024-07-24 08:32:13,841 views Crypto: Uniswap, Image URL: https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669
+DEBUG 2024-07-24 08:32:13,841 views Crypto: Polkadot, Image URL: https://coin-images.coingecko.com/coins/images/12171/large/polkadot.png?1696512008
+DEBUG 2024-07-24 08:32:13,842 views Crypto: Litecoin, Image URL: https://coin-images.coingecko.com/coins/images/2/large/litecoin.png?1696501400
+DEBUG 2024-07-24 08:32:13,842 views Crypto: Bitcoin Cash, Image URL: https://coin-images.coingecko.com/coins/images/780/large/bitcoin-cash-circle.png?1696501932
+DEBUG 2024-07-24 08:32:13,843 views Crypto: LEO Token, Image URL: https://coin-images.coingecko.com/coins/images/8418/large/leo-token.png?1696508607
+DEBUG 2024-07-24 08:32:13,843 views Crypto: NEAR Protocol, Image URL: https://coin-images.coingecko.com/coins/images/10365/large/near.jpg?1696510367
+DEBUG 2024-07-24 08:32:13,844 views Crypto: Wrapped eETH, Image URL: https://coin-images.coingecko.com/coins/images/33033/large/weETH.png?1701438396
+DEBUG 2024-07-24 08:32:13,844 views Crypto: Uniswap, Image URL: https://coin-images.coingecko.com/coins/images/12504/large/uniswap-logo.png?1720676669
+DEBUG 2024-07-24 08:32:13,845 views Crypto: Dai, Image URL: https://coin-images.coingecko.com/coins/images/9956/large/Badge_Dai.png?1696509996
+DEBUG 2024-07-24 08:32:13,846 views Crypto: Litecoin, Image URL: https://coin-images.coingecko.com/coins/images/2/large/litecoin.png?1696501400
+DEBUG 2024-07-24 08:32:13,846 views Crypto: Pepe, Image URL: https://coin-images.coingecko.com/coins/images/29850/large/pepe-token.jpeg?1696528776
+DEBUG 2024-07-24 08:32:13,847 views Crypto: LEO Token, Image URL: https://coin-images.coingecko.com/coins/images/8418/large/leo-token.png?1696508607
+DEBUG 2024-07-24 08:32:13,847 views Crypto: Polygon, Image URL: https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745
+DEBUG 2024-07-24 08:32:13,848 views Crypto: Wrapped eETH, Image URL: https://coin-images.coingecko.com/coins/images/33033/large/weETH.png?1701438396
+DEBUG 2024-07-24 08:32:13,848 views Crypto: Internet Computer, Image URL: https://coin-images.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png?1696514180
+DEBUG 2024-07-24 08:32:13,848 views Crypto: Dai, Image URL: https://coin-images.coingecko.com/coins/images/9956/large/Badge_Dai.png?1696509996
+DEBUG 2024-07-24 08:32:13,849 views Crypto: Kaspa, Image URL: https://coin-images.coingecko.com/coins/images/25751/large/kaspa-icon-exchanges.png?1696524837
+DEBUG 2024-07-24 08:32:13,849 views Crypto: Pepe, Image URL: https://coin-images.coingecko.com/coins/images/29850/large/pepe-token.jpeg?1696528776
+DEBUG 2024-07-24 08:32:13,849 views Crypto: Ethereum Classic, Image URL: https://coin-images.coingecko.com/coins/images/453/large/ethereum-classic-logo.png?1696501717
+DEBUG 2024-07-24 08:32:13,851 views Crypto: Polygon, Image URL: https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745
+DEBUG 2024-07-24 08:32:13,851 views Crypto: Ethena USDe, Image URL: https://coin-images.coingecko.com/coins/images/33613/large/USDE.png?1716355685
+DEBUG 2024-07-24 08:32:13,852 views Crypto: Internet Computer, Image URL: https://coin-images.coingecko.com/coins/images/14495/large/Internet_Computer_logo.png?1696514180
+DEBUG 2024-07-24 08:32:13,856 views Crypto: Kaspa, Image URL: https://coin-images.coingecko.com/coins/images/25751/large/kaspa-icon-exchanges.png?1696524837
+INFO 2024-07-24 08:32:13,856 basehttp "GET /api/crypto-data/ HTTP/1.1" 200 6556
+DEBUG 2024-07-24 08:32:13,857 views Crypto: Ethereum Classic, Image URL: https://coin-images.coingecko.com/coins/images/453/large/ethereum-classic-logo.png?1696501717
+DEBUG 2024-07-24 08:32:13,858 views Crypto: Ethena USDe, Image URL: https://coin-images.coingecko.com/coins/images/33613/large/USDE.png?1716355685
+INFO 2024-07-24 08:32:13,863 basehttp "GET /api/crypto-list-data/ HTTP/1.1" 200 6556
+DEBUG 2024-07-24 08:32:16,653 views Starting portfolio view
+DEBUG 2024-07-24 08:32:16,654 views Fetching and transforming crypto data
+DEBUG 2024-07-24 08:32:16,655 views Returning cached data
+ERROR 2024-07-24 08:32:16,952 log Internal Server Error: /portfolio/
+Traceback (most recent call last):
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\LocalCache\local-packages\Python311\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\OneDrive\Documents\GitHub\Crypto-News\CryptoNews\Website\views.py", line 385, in portfolio_view
+    crypto_data, coin_map = fetch_and_transform_crypto_data()
+    ^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
+ERROR 2024-07-24 08:32:16,958 basehttp "GET /portfolio/ HTTP/1.1" 500 77601
