@@ -307,31 +307,49 @@
         <p>{{ error }}</p>
     {% endif %}
 
-    <div id="portfolio-list" class="portfolio-container">
-        {% for entry in portfolio_data %}
-            <div class="portfolio-item">
-                <div>
-                    <p>Cryptocurrency: {{ entry.crypto_name }}</p>
-                    <p>Amount Owned: {{ entry.amount_owned }}</p>
-                    <p>Purchase Price: {{ entry.purchase_price }}</p>
-                    <p>Current Price: {{ entry.current_price }}</p>
-                    <p>Current Value: {{ entry.current_value }}</p>
-                    <p class="{% if entry.profit_loss > 0 %}positive{% elif entry.profit_loss < 0 %}negative{% endif %}">
-                        Profit/Loss: {{ entry.profit_loss }}
-                    </p>
-                </div>
-                <div>
-                    {% if entry.id %}
-                        <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="delete-button">Delete</button>
-                        </form>
-                    {% else %}
-                        <p>No ID available for this entry.</p>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
+    <!-- New Portfolio Summary Section -->
+    <div class="portfolio-summary">
+        <h2>Portfolio Summary</h2>
+        <p>Total Value: ${{ total_value|floatformat:2 }}</p>
+        <p>Total Profit/Loss: ${{ total_profit_loss|floatformat:2 }} ({{ total_profit_loss_percentage|floatformat:2 }}%)</p>
+
+        <table id="portfolio-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cryptocurrency</th>
+                    <th>Amount Owned</th>
+                    <th>Purchase Price</th>
+                    <th>Current Price</th>
+                    <th>Current Value</th>
+                    <th>Profit/Loss</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in portfolio_data %}
+                <tr>
+                    <td>{{ entry.crypto_name }} ({{ entry.crypto_symbol }})</td>
+                    <td>{{ entry.amount_owned|floatformat:8 }}</td>
+                    <td>${{ entry.purchase_price|floatformat:2 }}</td>
+                    <td>${{ entry.current_price|floatformat:2 }}</td>
+                    <td>${{ entry.current_value|floatformat:2 }}</td>
+                    <td class="{% if entry.profit_loss > 0 %}positive{% elif entry.profit_loss < 0 %}negative{% endif %}">
+                        ${{ entry.profit_loss|floatformat:2 }} ({{ entry.profit_loss_percentage|floatformat:2 }}%)
+                    </td>
+                    <td>
+                        {% if entry.id %}
+                            <form action="{% url 'delete_portfolio' entry.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        {% else %}
+                            <p>No ID available</p>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <!-- Pie Chart -->
@@ -386,5 +404,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Add these to your HTML <head> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+    <!-- Add this JavaScript to initialize the DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#portfolio-table').DataTable({
+                "order": [[ 4, "desc" ]],  // Sort by Current Value column descending
+                "pageLength": 10,  // Show 10 entries per page
+                "lengthChange": false,  // Disable "Show X entries" dropdown
+            });
+        });
+    </script>
 </body>
 </html>

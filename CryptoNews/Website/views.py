@@ -6,9 +6,10 @@ import io
 import base64
 import matplotlib
 import random
+import matplotlib.dates as mdates
 matplotlib.use('Agg')
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -97,23 +98,15 @@ def fetch_and_transform_crypto_data():
             if symbol and coin_id:
                 coin_map[symbol] = coin_id
 
-        # Cache the transformed data
-        cache.set('crypto_data', transformed_data, timeout=60*5)
-        return transformed_data
-
-    except requests.RequestException as e:
-        logger.error(f'Error fetching data from CoinGecko: {e}')
-        return []
-
-        # Cache the result
-        cache.set('crypto_data', (transformed_data, coin_map), timeout=3600)  # Cache for 1 hour
+        # Cache the transformed data and coin map
+        cache.set('crypto_data', (transformed_data, coin_map), timeout=60*5)
         logger.debug('Fetched and cached new data')
         logger.debug(f'Transformed data: {transformed_data}')
         logger.debug(f'Coin map: {coin_map}')
         return transformed_data, coin_map
 
     except requests.RequestException as e:
-        logger.error(f'Error fetching data: {str(e)}')
+        logger.error(f'Error fetching data from CoinGecko: {e}')
         # Return empty data and coin_map in case of error
         return [], {}
     
@@ -187,7 +180,8 @@ def get_portfolio_data(request):
     return JsonResponse(data, safe=False)
 
 def fetch_dropdown_data():
-    transformed_data = fetch_and_transform_crypto_data()
+    transformed_data, coin_map = fetch_and_transform_crypto_data()
+    
     if isinstance(transformed_data, list):
         dropdown_data = [{'symbol': crypto.get('symbol', ''), 'name': crypto.get('name', '')} for crypto in transformed_data]
         logger.debug(f"Dropdown Data: {dropdown_data}")
@@ -196,7 +190,6 @@ def fetch_dropdown_data():
         dropdown_data = []
 
     return dropdown_data
-
 
 def _fetch_current_price(crypto_symbols, coin_map):
     # Ensure coin_map is a dictionary
@@ -381,76 +374,95 @@ def register_view(request):
 def portfolio_view(request):
     logger.debug("Starting portfolio view")
 
-    # Fetch crypto data and coin map
     crypto_data, coin_map = fetch_and_transform_crypto_data()
-
     portfolios = Portfolio.objects.filter(user=request.user)
-    logger.debug(f"Portfolios for user {request.user}: {portfolios}")
 
     portfolio_data = []
+    total_value = Decimal('0')
+    total_profit_loss = Decimal('0')
+
     for portfolio in portfolios:
-        logger.debug(f"Processing portfolio: {portfolio}")
+        try:
+            current_price = _fetch_current_price([portfolio.crypto_symbol], coin_map)[portfolio.crypto_symbol]
+            current_price_decimal = Decimal(current_price)
+            
+            current_value = current_price_decimal * portfolio.amount_owned
+            profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
+            profit_loss_percentage = (profit_loss / (portfolio.purchase_price * portfolio.amount_owned)) * 100
 
-        # Pass coin_map instead of crypto_data to _fetch_current_price
-        current_price = _fetch_current_price([portfolio.crypto_symbol], coin_map)[portfolio.crypto_symbol]
-        current_value = current_price * portfolio.amount_owned
-        profit_loss = current_value - (portfolio.purchase_price * portfolio.amount_owned)
+            portfolio_entry = {
+                'id': portfolio.id,
+                'crypto_name': portfolio.crypto_name,
+                'crypto_symbol': portfolio.crypto_symbol,
+                'amount_owned': portfolio.amount_owned,
+                'purchase_price': portfolio.purchase_price,
+                'current_price': current_price_decimal,
+                'current_value': current_value,
+                'profit_loss': profit_loss,
+                'profit_loss_percentage': profit_loss_percentage
+            }
+            portfolio_data.append(portfolio_entry)
+            
+            total_value += current_value
+            total_profit_loss += profit_loss
 
-        portfolio_data.append({
-            'id': portfolio.id,
-            'crypto_name': portfolio.crypto_name,
-            'crypto_symbol': portfolio.crypto_symbol,
-            'amount_owned': portfolio.amount_owned,
-            'purchase_price': portfolio.purchase_price,
-            'purchase_date': portfolio.purchase_date,
-            'current_price': current_price,
-            'current_value': current_value,
-            'profit_loss': profit_loss,
-        })
-        logger.debug(f"Added portfolio data: {portfolio_data[-1]}")
+        except Exception as e:
+            logger.error(f"Error processing portfolio {portfolio.crypto_symbol}: {e}")
 
-    valuation_data = calculate_valuation_over_time(portfolio_data, crypto_data, coin_map)
-    valuation_chart_url = generate_valuation_chart(valuation_data)
+    # Sort portfolio_data by current_value (descending)
+    portfolio_data.sort(key=lambda x: x['current_value'], reverse=True)
 
     context = {
         'portfolio_data': portfolio_data,
+        'total_value': total_value,
+        'total_profit_loss': total_profit_loss,
+        'total_profit_loss_percentage': (total_profit_loss / total_value) * 100 if total_value else 0,
         'dropdown_data': fetch_dropdown_data(),
         'pie_chart': generate_pie_chart(portfolio_data),
-        'valuation_chart': valuation_chart_url,
+        'valuation_chart': generate_valuation_chart(calculate_valuation_over_time(portfolio_data, crypto_data, coin_map))
     }
 
-    logger.debug(f"Rendering portfolio page with context: {context}")
     return render(request, 'portfolio.html', context)
 
 def calculate_valuation_over_time(portfolio_data, crypto_data, coin_map):
     logger.debug("Calculating valuation over time")
     
-    # Define time periods and corresponding days
     dates = ['7 days ago', '30 days ago', '180 days ago', '365 days ago']
     days_ago_list = [7, 30, 180, 365]
     valuation_over_time = {date: Decimal('0') for date in dates}
-
-    # Get unique crypto symbols
+    
     crypto_symbols = list(set(item['crypto_symbol'] for item in portfolio_data))
     
-    # Fetch historical data for these symbols
+    logger.debug(f"Fetching historical data for symbols: {crypto_symbols} over days: {days_ago_list}")
     historical_prices = fetch_historical_data_bulk(crypto_symbols, days_ago_list, coin_map)
-
+    
     for item in portfolio_data:
         symbol = item['crypto_symbol']
         amount_owned = Decimal(item['amount_owned'])
-
-        if symbol in historical_prices:
-            for idx, date in enumerate(dates):
-                price = Decimal(historical_prices[symbol][idx]) if len(historical_prices[symbol]) > idx else Decimal('0')
-                if price > 0:
-                    valuation_over_time[date] += price * amount_owned
-                else:
-                    logger.warning(f"Invalid price for {symbol} on {date}: {price}")
-        else:
+        
+        if symbol not in historical_prices:
             logger.warning(f"No historical data found for symbol {symbol}")
-
-    logger.debug(f"Valuation over time: {valuation_over_time}")
+            continue
+        
+        for idx, date in enumerate(dates):
+            if idx >= len(historical_prices[symbol]):
+                logger.warning(f"No price data available for {symbol} on {date}")
+                continue
+            
+            price = Decimal(historical_prices[symbol][idx])
+            if price > 0:
+                valuation = price * amount_owned
+                valuation_over_time[date] += valuation
+                logger.debug(f"Added valuation for {symbol} on {date}: {valuation}")
+            else:
+                logger.warning(f"Invalid price for {symbol} on {date}: {price}")
+    
+    # Check for any periods with zero valuation
+    for date, value in valuation_over_time.items():
+        if value == 0:
+            logger.warning(f"Total valuation for {date} is zero. This may indicate missing data.")
+    
+    logger.debug(f"Final valuation over time: {valuation_over_time}")
     return valuation_over_time
 
 def generate_pie_chart(portfolio_data):
@@ -470,8 +482,17 @@ def generate_pie_chart(portfolio_data):
 
 
 def generate_valuation_chart(valuation_data):
-    dates = list(valuation_data.keys())
-    values = list(valuation_data.values())
+    current_date = datetime.now().date()
+    dates = []
+    values = []
+
+    # Sort the data to ensure it's in the correct order
+    sorted_data = sorted(valuation_data.items(), key=lambda x: int(x[0].split()[0]), reverse=True)
+
+    for date_str, value in sorted_data:
+        days = int(date_str.split()[0])
+        dates.append(current_date - timedelta(days=days))
+        values.append(value)
 
     fig, ax = plt.subplots()
     ax.plot(dates, values, marker='o', linestyle='-', color='b')
@@ -479,45 +500,27 @@ def generate_valuation_chart(valuation_data):
     ax.set(xlabel='Date', ylabel='Total Value (USD)',
            title='Portfolio Valuation Over Time')
     ax.grid()
-    plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+
+    # Format x-axis
+    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+
+    # Keep labels horizontal and adjust font size if needed
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=0, ha='center', fontsize=8)
+
+    # Format y-axis to use commas as thousand separators
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: format(int(x), ',')))
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
 
     buf = io.BytesIO()
-    plt.savefig(buf, format='png')
+    plt.savefig(buf, format='png', bbox_inches='tight')
     buf.seek(0)
     image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
     plt.close(fig)
     return f'data:image/png;base64,{image_base64}'
-
-def create_portfolio_view(request):
-    if request.method == 'POST':
-        form = PortfolioForm(request.POST)
-        if form.is_valid():
-            portfolio = form.save(commit=False)
-            crypto_symbol = form.cleaned_data.get('crypto_symbol')
-
-            # Fetch dropdown data
-            dropdown_data = fetch_dropdown_data()
-            valid_symbols = [crypto['symbol'] for crypto in dropdown_data]
-
-            if crypto_symbol in valid_symbols:
-                portfolio.user = request.user
-                portfolio.save()
-                logger.debug(f"Portfolio entry added: {portfolio}")
-                return JsonResponse({'success': True, 'message': 'Portfolio entry added successfully'})
-            else:
-                logger.error(f"Invalid crypto_symbol: {crypto_symbol}")
-                return JsonResponse({'success': False, 'errors': {'crypto_symbol': 'Invalid cryptocurrency symbol'}}, status=400)
-        else:
-            errors = form.errors
-            logger.error(f"Form errors: {errors}")
-            return JsonResponse({'success': False, 'errors': errors}, status=400)
-    else:
-        form = PortfolioForm()
-
-    context = {
-        'form': form,
-    }
-    return render(request, 'create_portfolio.html', context)
 
 @login_required
 def settings_view(request):
