@@ -51,14 +51,11 @@ def home_view(request):
 
 def fetch_and_transform_crypto_data():
     logger.debug("Fetching and transforming crypto data")
-
-    # Attempt to get cached data
     cached_data = cache.get('crypto_data')
     if cached_data:
         logger.debug('Returning cached data')
         return cached_data
 
-    # Fetch top 30 coins by market cap
     url = 'https://api.coingecko.com/api/v3/coins/markets'
     params = {
         'vs_currency': 'usd',
@@ -80,63 +77,36 @@ def fetch_and_transform_crypto_data():
         for crypto in data:
             symbol = crypto.get('symbol', '').upper()
             coin_id = crypto.get('id', '')
-
-            image_url = crypto.get('image', '')
-            logger.debug(f'Crypto: {crypto.get("name", "")}, Image URL: {image_url}')
-
-            # Add entry to transformed_data
+            image_url = crypto.get('image', '') or '/static/default_crypto_image.png'
+            
             transformed_data.append({
-                'name': crypto.get('name', ''),
+                'name': crypto.get('name', 'Unknown'),
                 'symbol': symbol,
-                'price': sanitize_price(crypto.get('current_price', '0')),
+                'price': sanitize_price(crypto.get('current_price', 'N/A')),
                 'price_change_percentage_24h': crypto.get('price_change_percentage_24h', 'N/A'),
                 'marketcap': _format_marketcap(crypto.get('market_cap', 0)),
                 'image': image_url
             })
 
-            # Add entry to coin_map
             if symbol and coin_id:
                 coin_map[symbol] = coin_id
 
-        # Cache the transformed data and coin map
         cache.set('crypto_data', (transformed_data, coin_map), timeout=60*5)
-        logger.debug('Fetched and cached new data')
-        logger.debug(f'Transformed data: {transformed_data}')
-        logger.debug(f'Coin map: {coin_map}')
+        logger.debug(f'Fetched and cached new data. Sample: {transformed_data[:2]}')
         return transformed_data, coin_map
 
     except requests.RequestException as e:
         logger.error(f'Error fetching data from CoinGecko: {e}')
-        # Return empty data and coin_map in case of error
         return [], {}
     
 def get_crypto_data(request):
-    cache_key = 'crypto_data'
-    cache_time = 300  # Cache data for 5 minutes (300 seconds)
-    data = cache.get(cache_key)
-
-    if not data:
-        transformed_data = fetch_and_transform_crypto_data()
-        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
-            cache.set(cache_key, transformed_data, cache_time)
-        data = transformed_data
-
+    data, _ = fetch_and_transform_crypto_data()
     return JsonResponse(data, safe=False)
+
 
 def get_crypto_list_data(request):
-    cache_key = 'crypto_data'
-    cache_time = 300  # Cache data for 5 minutes (300 seconds)
-    data = cache.get(cache_key)
-
-    if not data:
-        transformed_data = fetch_and_transform_crypto_data()
-        if not isinstance(transformed_data, dict):  # Check if it's not an error dictionary
-            cache.set(cache_key, transformed_data, cache_time)
-        data = transformed_data
-
+    data, _ = fetch_and_transform_crypto_data()
     return JsonResponse(data, safe=False)
-
-logger = logging.getLogger('CryptoNews')
 
 @login_required
 def get_portfolio_data(request):
@@ -192,11 +162,9 @@ def fetch_dropdown_data():
     return dropdown_data
 
 def _fetch_current_price(crypto_symbols, coin_map):
-    # Ensure coin_map is a dictionary
     if not isinstance(coin_map, dict):
         raise ValueError("coin_map must be a dictionary")
     
-    # Ensure all symbols are mapped in coin_map
     missing_symbols = [symbol for symbol in crypto_symbols if symbol not in coin_map]
     if missing_symbols:
         raise ValueError(f"Missing symbols in coin_map: {missing_symbols}")

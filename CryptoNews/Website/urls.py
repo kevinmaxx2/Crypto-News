@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 from .views import register_view, login_view, logout_view, home_view, get_crypto_data, CustomLoginView, register, portfolio_view, settings_view, CustomLogoutView, ajax_login_view, get_crypto_list_data
 from . import views
 
@@ -16,3 +18,5 @@ urlpatterns = [
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('check_duplicate/', views.check_duplicate, name='check_duplicate'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

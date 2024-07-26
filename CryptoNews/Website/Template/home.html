@@ -773,29 +773,31 @@
             // Handle errors fetching list data
         });
 
-    function populateCryptoTable(data) {
-        console.log('Populating table with data:', data);
-        const tableBody = document.querySelector('#cryptoTable tbody');
-        tableBody.innerHTML = ''; // Clear existing rows
+        function populateCryptoTable(data) {
+    console.log('Populating table with data:', data);
+    const tableBody = document.querySelector('#cryptoTable tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
 
-        data.forEach((crypto, index) => {
-            console.log('Crypto object:', crypto);
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <th scope="row">${index + 1}</th>
-                <td><img src="${crypto.image}" alt="${crypto.name}" class="crypto-image">${crypto.name} (${crypto.symbol})</td>
-                <td>${crypto.price}</td>
-                <td>${crypto.price_change_percentage_24h !== undefined && crypto.price_change_percentage_24h !== null
-                    ? (crypto.price_change_percentage_24h >= 0
-                        ? `<span class="text-success">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`
-                        : `<span class="text-danger">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`)
-                    : 'N/A'
-                }</td>
-                <td>${crypto.marketcap}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
+    data.forEach((crypto, index) => {
+        console.log(`Crypto ${index}:`, crypto);
+        console.log(`Image URL for ${crypto.name || 'unnamed crypto'}:`, crypto.image);
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <th scope="row">${index + 1}</th>
+            <td><img src="${crypto.image || '/static/default_crypto_image.png'}" alt="${crypto.name || 'Cryptocurrency'}" class="crypto-image">${crypto.name || 'Unknown'} (${crypto.symbol || 'N/A'})</td>
+            <td>${crypto.price || 'N/A'}</td>
+            <td>${crypto.price_change_percentage_24h !== undefined && crypto.price_change_percentage_24h !== null
+                ? (crypto.price_change_percentage_24h >= 0
+                    ? `<span class="text-success">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`
+                    : `<span class="text-danger">${crypto.price_change_percentage_24h.toFixed(2)}%</span>`)
+                : 'N/A'
+            }</td>
+            <td>${crypto.marketcap || 'N/A'}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
 
     function fetchInitialData() {
         console.log('Fetching initial crypto data from /api/crypto-data/');
@@ -814,18 +816,22 @@
     }
     
     function initializeCarousel(data) {
-        const carousel = $('#cryptoCarousel');
-        data.slice(0, 10).forEach(crypto => {
-            const carouselItem = `
-                <div class="carousel-item">
-                    <img class="crypto-image" src="${crypto.image}" alt="${crypto.name} Image">
-                    <div class="crypto-name">${crypto.name}</div>
-                    <div class="crypto-price">${crypto.price} USD</div>
-                    <div class="crypto-marketcap">Market Cap: ${crypto.marketcap}</div>
-                </div>
-            `;
-            carousel.append(carouselItem);
-        });
+    console.log('Initializing carousel with data:', data);
+    const carousel = $('#cryptoCarousel');
+    data.slice(0, 10).forEach((crypto, index) => {
+        console.log(`Carousel item ${index}:`, crypto);
+        console.log(`Image URL for ${crypto.name || 'unnamed crypto'}:`, crypto.image);
+        
+        const carouselItem = `
+            <div class="carousel-item">
+                <img class="crypto-image" src="${crypto.image || '/static/default_crypto_image.png'}" alt="${crypto.name || 'Cryptocurrency'} Image">
+                <div class="crypto-name">${crypto.name || 'Unknown Crypto'}</div>
+                <div class="crypto-price">${crypto.price || 'N/A'} USD</div>
+                <div class="crypto-marketcap">Market Cap: ${crypto.marketcap || 'N/A'}</div>
+            </div>
+        `;
+        carousel.append(carouselItem);
+    });
     
         // Initialize Slick carousel with autoplay
         carousel.slick({
